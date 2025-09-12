@@ -1,0 +1,20 @@
+.recipe-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.recipe-list__empty {
+  font-size: 1rem;
+  color: #555;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+/* Responsive tweaks */
+@media (max-width: 480px) {
+  .recipe-list {
+    grid-template-columns: 1fr;
+  }
+}

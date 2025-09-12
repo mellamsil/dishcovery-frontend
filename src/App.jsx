@@ -32,7 +32,11 @@ function App() {
             <Route path="/favorites" element={<Favorites />} />
             <Route
               path="/dashboard"
-              element={<PrivateRoute component={Dashboard} />}
+              element={
+                <PrivateRoute>
+                  <Dashboard />
+                </PrivateRoute>
+              }
             />
           </Routes>
           <Footer />
