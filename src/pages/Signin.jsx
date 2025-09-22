@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import SignInModal from "../modals/SignInModal";
+import LoginModal from "../modals/LoginModal";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 const Signin = () => {
@@ -9,27 +9,18 @@ const Signin = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // const handleSignIn = ({ email, password }) => {
-  //   setError(null);
-  //   signin(email, password)
-  //     .then(() => {
-  //       setShowModal(false);
-  //       navigate("/profile");
-  //     })
-  //     .catch(() => setError("Failed to sign in (Stage 1 demo)"));
-  // };
-
-  const handleSignIn = ({ email, password }) => {
-    const fakeUser = { name: "Demo User", email };
-    contextSignIn("demo-token", fakeUser);
-    navigate("/dashboard");
+  // Login.jsx
+  const handleSignIn = (credentials) => {
+    setError(null);
+    return signin(credentials) // add return
+      .then(() => setShowModal(false))
+      .catch(() => setError("Signin failed (Stage 1 demo)"));
   };
 
   return (
     <>
       {showModal && (
-        <SignInModal
-          isOpen={showModal}
+        <LoginModal
           onClose={() => setShowModal(false)}
           onSignIn={handleSignIn}
         />

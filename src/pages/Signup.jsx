@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import SignUpModal from "../modals/SignUpModal";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import RegisterModal from "../modals/RegisterModal";
+import { CurrentUserContext, useAuth } from "../contexts/CurrentUserContext";
 
 const Signup = () => {
   const { signup } = useContext(CurrentUserContext);
@@ -9,9 +9,10 @@ const Signup = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const handleSignUp = ({ name, email, password }) => {
+  // Signup.jsx
+  const handleSignUp = (formData) => {
     setError(null);
-    signup(name, email, password)
+    return signup(formData) // add return
       .then(() => {
         setShowModal(false);
         navigate("/profile");
@@ -22,8 +23,7 @@ const Signup = () => {
   return (
     <>
       {showModal && (
-        <SignUpModal
-          isOpen={showModal}
+        <RegisterModal
           onClose={() => setShowModal(false)}
           onSignUp={handleSignUp}
         />

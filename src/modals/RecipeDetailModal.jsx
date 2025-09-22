@@ -1,5 +1,5 @@
 import React from "react";
-import "./modal.css";
+import "../styles/modal.css";
 
 function RecipeDetailModal({ recipe, isSaving, onClose, onSave }) {
   if (!recipe) return null;

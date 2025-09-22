@@ -1,0 +1,111 @@
+.cookbook__notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-weight: bold;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideIn 0.3s forwards, fadeOut 0.3s 1.7s forwards;
+  z-index: 1000;
+}
+
+/* Notification Types */
+.cookbook__notification.add {
+  background-color: #4caf50; /* green */
+}
+.cookbook__notification.edit {
+  background-color: #2196f3; /* blue */
+}
+.cookbook__notification.delete {
+  background-color: #f44336; /* red */
+}
+
+/* Cookbook list actions */
+.cookbook-actions button {
+  margin-left: 8px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.cookbook-actions button:hover {
+  opacity: 0.85;
+}
+
+/* Show More button */
+.cookbook__show-more {
+  display: block;
+  margin: 16px auto;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: #2196f3;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.cookbook__show-more:hover {
+  background-color: #1976d2;
+  transform: translateY(-2px);
+}
+
+/* EditRecipeConfirm modal */
+.edit-recipe-confirm {
+  background-color: #ff9800; /* orange to distinguish */
+  color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 90%;
+  text-align: center;
+}
+
+.edit-recipe-confirm h2 {
+  margin-bottom: 16px;
+}
+
+.edit-recipe-confirm p {
+  margin-bottom: 24px;
+}
+
+.edit-recipe-confirm .modal-buttons button {
+  margin: 0 8px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.edit-recipe-confirm .modal-buttons .confirm {
+  background-color: #2196f3;
+  color: #fff;
+}
+
+.edit-recipe-confirm .modal-buttons .cancel {
+  background-color: #f44336;
+  color: #fff;
+}
+
+/* Animations for notifications */
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}

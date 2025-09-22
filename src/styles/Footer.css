@@ -1,0 +1,27 @@
+.footer {
+  background-color: #fffaf0;
+  color: #333;
+  padding: 16px 0;
+  border-top: 1px solid #ddd;
+  text-align: center;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 12px;
+}
+
+.footer-text {
+  margin: 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 12px 0;
+    font-size: 13px;
+  }
+}

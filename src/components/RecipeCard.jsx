@@ -1,10 +1,10 @@
 import React from "react";
-import "./RecipeCard.css";
+import "../styles/RecipeCard.css";
 
-function RecipeCard({ recipe, onSave, onOpen }) {
+function RecipeCard({ recipe, onOpen }) {
   return (
     <article
-      className="recipe-card"
+      className="recipe-card recipe-card--horizontal"
       onClick={() => onOpen && onOpen(recipe)}
       tabIndex={0}
     >
@@ -18,20 +18,6 @@ function RecipeCard({ recipe, onSave, onOpen }) {
       <div className="recipe-card__content">
         <h2 className="recipe-card__title">{recipe.title}</h2>
         <p className="recipe-card__description">{recipe.description || ""}</p>
-        {recipe.cookingTime && (
-          <p className="recipe-card__time">{recipe.cookingTime} mins</p>
-        )}
-        <button
-          type="button"
-          className="btn-primary"
-          aria-label={`Save ${recipe.title} to cookbook`}
-          onClick={(e) => {
-            e.stopPropagation();
-            onSave && onSave(recipe);
-          }}
-        >
-          Save to Cookbook
-        </button>
       </div>
     </article>
   );
