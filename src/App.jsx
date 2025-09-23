@@ -15,7 +15,7 @@ import "./App.css";
 
 function App() {
   return (
-    <Router>
+    <Router basename="/dishcovery-frontend">
       <Header />
 
       <main className="main-content">

@@ -1,42 +1,58 @@
 # Dishcovery – Stage 1 (Frontend)
 
+Dishcovery is a custom recipe and cookbook management application built with **React + Vite**.  
+This repository contains the **Stage 1 (Frontend)** implementation, including UI, routing, mock API integration, and deployment.
+
 ## Project Overview
 
-Dishcovery is a custom frontend project built using React and Vite. Stage 1 focuses on implementing a responsive and interactive UI where users can explore recipes, manage their personal cookbook, and interact with recipe cards.
-The application adapts to multiple screen resolutions and provides a clean, user-friendly interface.
+The project provides users with an interactive platform to register, sign in, and manage personal cookbooks. Users can add recipes, upload images, and view their personalized profile. The application is designed with responsive layouts to adapt across devices.
 
 ## Features
 
-- Responsive Design: Works across multiple screen sizes with no horizontal scrolling.
-- User Authentication: Registration and login modals with form validation.
-- Personal Cookbook: Users can add, view, and delete recipes.
-- Interactive Modals: Modals for adding items, registering, logging in, and confirming deletion.
-- Reusable Components: Recipe cards, buttons, forms, headers, and modals are reusable.
-- Navigation: Multi-route support with working internal and external links.
+- **User Authentication (mock data for Stage 1)**  
+  Register, sign in, and switch between modals.
+- **Profile Sidebar**  
+  Displays user avatar, name, and "My Cookbook".
+- **Recipe Management**  
+  Add, view, and manage recipes in a cookbook.
+- **Reusable Components**  
+  Built with modular React components (Header, Footer, Modals, SideBar, RecipeCard).
+- **Routing**  
+  Navigation between key pages (e.g., Home, Profile).
+- **Responsive Design**  
+  Optimized for multiple screen resolutions without horizontal scrolling.
+- **Error Handling**  
+  Form validation and user-friendly error messages.
 
 ## Technical Details
 
-- Framework: React 15 (functional components)
-- Bundler: Vite
-- Styling: Component-level CSS using BEM methodology
-- State Management: React useState, useEffect, and useRef hooks
-- Routing: React Router for navigation
-- Form Handling: Validation with inline error messages and loading states
-- Popups/Modals: Can be closed via cross button, overlay click, or ESC key
+- **Framework**: [React](https://react.dev/) with [Vite](https://vitejs.dev/)
+- **Routing**: [React Router v7](https://reactrouter.com/en/main)
+- **Styling**: CSS with BEM methodology
+- **Build Tool**: Vite
+- **Deployment**: GitHub Pages
+
+**Folder Structure Highlights**:
+
+- `src/components` → Reusable UI components
+- `src/modals` → Register, Login, AddItem, DeleteConfirm, etc.
+- `src/pages` → Main page components (e.g., Home, Profile)
+- `src/utils/api.js` → API request handling (mocked for Stage 1)
 
 ## API Integration (Mock)
 
-- Data Source: Mock data for recipes and user information
-- API Requests: Handled via Fetch API in utils/api.js
-- Promises: Each request chain ends with a .then() for success and .catch() for errors
-- Error Handling: User-friendly messages are displayed for API errors
-- Configuration: Hard-coded constants stored in a separate configuration file
-  Note: The mock API simulates asynchronous calls to demonstrate fetching and displaying data.
+For Stage 1, API calls are mocked. A real backend (Express + MongoDB) will be connected in later stages.
+
+- Endpoints:
+  - `/signup` → Register new user
+  - `/signin` → Log in
+  - `/users/me` → Fetch current user
 
 ## Deployment
 
-- Stage 1 Frontend Deployment: GitHub Pages
-- URL: [Your GitHub Pages URL]
+The frontend is deployed on **GitHub Pages**.
+
+**Live Demo**: [Dishcovery Frontend](https://mellamsil.github.io/dishcovery-frontend/)
 
 ## Usage
 
@@ -50,3 +66,9 @@ The application adapts to multiple screen resolutions and provides a clean, user
 8. npm run build
 9. Deploy to GitHub Pages:
 10. npm run deploy
+
+## Next Steps
+
+Stage 2: Connect to backend API (Express + MongoDB).
+
+Stage 3: Full-stack deployment on Google Cloud.
