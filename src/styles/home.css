@@ -138,8 +138,8 @@
 
 .hero-imac__screen {
   position: relative;
-  width: 90%;
-  height: 80%;
+  /* width: 90%; */
+  /* height: 80%; */
   border-radius: 6px;
   overflow-y: auto;
   background: #fff;

@@ -19,7 +19,6 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
   const [loading, setLoading] = useState(false);
   const modalRef = useRef(null);
 
-  // Focus first input on mount
   useEffect(() => {
     const focusable = modalRef.current?.querySelectorAll(
       "input, button, textarea, a[href]"
@@ -27,14 +26,12 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
     if (focusable?.length) focusable[0].focus();
   }, []);
 
-  // Close modal on Escape key
   useEffect(() => {
     const handleEsc = (e) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
   }, [onClose]);
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm((prev) => ({
@@ -43,7 +40,6 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
     }));
   };
 
-  // Validate form
   const validateForm = () => {
     if (!form.name.trim() || form.name.length < 2 || form.name.length > 30)
       return "Name must be between 2 and 30 characters.";
@@ -63,9 +59,7 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
     return null;
   };
 
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleRegisterClick = () => {
     setError(null);
 
     const validationError = validateForm();
@@ -83,40 +77,12 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
       .finally(() => setLoading(false));
   };
 
-  // Progress for dynamic button styling
-  const getCompletion = () => {
-    const requiredFields = ["name", "email", "password", "avatar"];
-    let filled = requiredFields.filter(
-      (field) => form[field]?.trim() !== ""
-    ).length;
-    if (form.terms) filled++;
-    return Math.floor((filled / (requiredFields.length + 1)) * 100);
-  };
-
-  const completion = getCompletion();
-  const buttonClass =
-    completion >= 100
-      ? "btn-complete"
-      : completion >= 75
-      ? "btn-progress-3"
-      : completion >= 50
-      ? "btn-progress-2"
-      : completion >= 25
-      ? "btn-progress-1"
-      : "btn-progress-0";
-
   return (
     <ModalWithForm
       title="Register"
-      onSubmit={handleSubmit}
       onClose={onClose}
       ref={modalRef}
       closeIcon={CloseIcon}
-      submitText={loading ? "Registering..." : "Register"}
-      secondaryText="or Sign In"
-      secondaryAction={onSwitchToLogin}
-      isLoading={loading}
-      submitClassName={buttonClass}
     >
       {error && <p className="modal-error">{error}</p>}
 
@@ -204,6 +170,25 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
         <label htmlFor="terms" className="checkbox-text">
           I agree to the Terms of Service and Privacy Policy
         </label>
+      </div>
+
+      {/* Only Register + Sign In buttons */}
+      <div className="modal__actions">
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={handleRegisterClick}
+          disabled={loading}
+        >
+          {loading ? "Registering..." : "Register"}
+        </button>
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={onSwitchToLogin}
+        >
+          or Sign In
+        </button>
       </div>
     </ModalWithForm>
   );

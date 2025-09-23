@@ -146,12 +146,26 @@
   color: #333;
 }
 
+.modal__actions .btn {
+  min-width: 120px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.btn-secondary {
+  background-color: #f1f1f1;
+  color: #333;
+}
+
 .modal-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 16px;
   flex-wrap: wrap;
-  margin-top: 12px;
+  margin-top: 24px;
 }
 
 .modal button {
