@@ -3,11 +3,12 @@ import react from "@vitejs/plugin-react";
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: "/dishcovery-frontend/",
   plugins: [react()],
   server: {
     port: 3000,
     proxy: {
-      "/api": "http://localhost:5000", // forward API calls
+      "/api": "http://localhost:5000",
     },
   },
 });
