@@ -101,35 +101,99 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-@media (max-width: 479px) {
+/* Tablet: 768px - 1024px */
+@media (max-width: 1024px) {
   .recipe-card {
-    width: 90%;
+    width: 45%; /* two cards per row */
+    max-height: 160px;
+  }
+
+  .recipe-card--horizontal {
+    max-width: 500px;
+    height: 110px;
+    grid-template-columns: 140px 1fr;
+  }
+
+  .recipe-card--horizontal .recipe-card__title {
+    font-size: 15px;
+  }
+
+  .recipe-card--horizontal .recipe-card__description {
+    font-size: 12px;
+  }
+}
+
+/* iPad Portrait: 768px */
+@media (max-width: 768px) {
+  .recipe-card {
+    width: 100%; /* single card per row */
+    max-height: 150px;
+    flex-direction: column;
   }
 
   .recipe-card__image {
     height: 120px;
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #eee;
   }
 
   .recipe-card__title {
-    font-size: 13px;
+    font-size: 15px;
   }
 
   .recipe-card__description {
     font-size: 12px;
   }
-}
 
-/* Responsive adjustments */
-@media (max-width: 767px) {
   .recipe-card--horizontal {
-    grid-template-columns: 1fr; /* stack vertically on small screens */
+    grid-template-columns: 1fr;
+    grid-template-rows: 100px auto;
     height: auto;
   }
 
   .recipe-card--horizontal .recipe-card__image {
-    height: 150px;
-    width: 100%;
     border-radius: 8px 8px 0 0;
+    height: 100px;
+  }
+}
+
+/* Mobile: 480px and below */
+@media (max-width: 480px) {
+  .recipe-card {
+    width: 100%;
+    max-height: 140px;
+    flex-direction: column;
+  }
+
+  .recipe-card__image {
+    height: 100px;
+  }
+
+  .recipe-card__title {
+    font-size: 14px;
+  }
+
+  .recipe-card__description {
+    font-size: 11px;
+  }
+
+  .recipe-card--horizontal {
+    grid-template-columns: 1fr;
+    grid-template-rows: 90px auto;
+    height: auto;
+    max-width: 100%;
+  }
+
+  .recipe-card--horizontal .recipe-card__image {
+    height: 90px;
+  }
+
+  .recipe-card--horizontal .recipe-card__title {
+    font-size: 14px;
+  }
+
+  .recipe-card--horizontal .recipe-card__description {
+    font-size: 11px;
   }
 }

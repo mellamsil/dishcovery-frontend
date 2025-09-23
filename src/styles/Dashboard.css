@@ -1,4 +1,3 @@
-/* Dashboard main container */
 .dashboard {
   padding: 2rem;
   min-height: 100vh;
@@ -6,7 +5,6 @@
   font-family: Arial, sans-serif;
 }
 
-/* Title styling */
 .dashboard__title {
   font-size: 2rem;
   font-weight: 700;
@@ -14,21 +12,18 @@
   color: #333;
 }
 
-/* Intro paragraph */
 .dashboard__intro {
   font-size: 1.1rem;
   color: #555;
   margin-bottom: 2rem;
 }
 
-/* Example card layout for saved recipes or activity */
 .dashboard__cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1.5rem;
 }
 
-/* Individual card */
 .dashboard__card {
   background: white;
   border-radius: 12px;
@@ -41,15 +36,98 @@
   transform: translateY(-4px);
 }
 
-/* Card title */
 .dashboard__card-title {
   font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
 }
 
-/* Card content */
 .dashboard__card-content {
   font-size: 0.95rem;
   color: #666;
+}
+
+/* Tablet: 768px - 1024px */
+@media (max-width: 1024px) {
+  .dashboard {
+    padding: 1.5rem;
+  }
+
+  .dashboard__title {
+    font-size: 1.75rem;
+  }
+
+  .dashboard__intro {
+    font-size: 1rem;
+  }
+
+  .dashboard__cards {
+    gap: 1.2rem;
+  }
+
+  .dashboard__card-title {
+    font-size: 1.1rem;
+  }
+
+  .dashboard__card-content {
+    font-size: 0.9rem;
+  }
+}
+
+/* iPad Portrait: ~768px */
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 1rem;
+  }
+
+  .dashboard__title {
+    font-size: 1.5rem;
+  }
+
+  .dashboard__intro {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .dashboard__cards {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+  }
+
+  .dashboard__card-title {
+    font-size: 1rem;
+  }
+
+  .dashboard__card-content {
+    font-size: 0.85rem;
+  }
+}
+
+/* Mobile: 480px and below */
+@media (max-width: 480px) {
+  .dashboard {
+    padding: 0.75rem;
+  }
+
+  .dashboard__title {
+    font-size: 1.25rem;
+  }
+
+  .dashboard__intro {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .dashboard__cards {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .dashboard__card-title {
+    font-size: 0.95rem;
+  }
+
+  .dashboard__card-content {
+    font-size: 0.8rem;
+  }
 }

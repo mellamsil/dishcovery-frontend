@@ -28,25 +28,41 @@ body {
   box-sizing: border-box;
 }
 
-/* Tablet (iPad) */
+/* Tablet: 768px - 1024px */
 @media (max-width: 1024px) {
   .main {
     padding: 0 12px;
     gap: 20px;
   }
+
+  .modal {
+    width: 350px;
+    padding: 18px;
+  }
 }
 
-/* Mobile */
+/* iPad Portrait: ~768px */
 @media (max-width: 768px) {
   .main {
     padding: 0 10px;
     gap: 16px;
   }
+
+  .modal {
+    width: 300px;
+    padding: 16px;
+  }
 }
 
+/* Mobile: 480px and below */
 @media (max-width: 480px) {
   .main {
     padding: 0 8px;
     gap: 12px;
+  }
+
+  .modal {
+    width: 260px;
+    padding: 12px;
   }
 }

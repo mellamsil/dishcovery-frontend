@@ -77,12 +77,22 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
       .finally(() => setLoading(false));
   };
 
+  // Safe wrapper for the "or Sign In" button
+  const handleSwitchToLogin = () => {
+    if (onSwitchToLogin && typeof onSwitchToLogin === "function") {
+      onSwitchToLogin();
+    } else {
+      console.warn("onSwitchToLogin function is not defined in parent");
+    }
+  };
+
   return (
     <ModalWithForm
       title="Register"
       onClose={onClose}
       ref={modalRef}
       closeIcon={CloseIcon}
+      hideSubmit={true} // hide the default submit button
     >
       {error && <p className="modal-error">{error}</p>}
 
@@ -172,7 +182,7 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
         </label>
       </div>
 
-      {/* Only Register + Sign In buttons */}
+      {/* Register + Sign In buttons */}
       <div className="modal__actions">
         <button
           type="button"
@@ -185,7 +195,7 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
         <button
           type="button"
           className="btn btn-secondary"
-          onClick={onSwitchToLogin}
+          onClick={handleSwitchToLogin}
         >
           or Sign In
         </button>

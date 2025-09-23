@@ -54,13 +54,18 @@ const LoginModal = ({ onClose, onSignIn, onSwitchToRegister }) => {
 
     setLoading(true);
     onSignIn(form)
-      .then(() => {
-        onClose();
-      })
-      .catch((err) => {
-        setError(err?.message || "Login failed");
-      })
+      .then(() => onClose())
+      .catch((err) => setError(err?.message || "Login failed"))
       .finally(() => setLoading(false));
+  };
+
+  // Safe wrapper for "or Register"
+  const handleSwitchToRegister = () => {
+    if (onSwitchToRegister && typeof onSwitchToRegister === "function") {
+      onSwitchToRegister();
+    } else {
+      console.warn("onSwitchToRegister function is not defined in parent");
+    }
   };
 
   return (
@@ -70,10 +75,7 @@ const LoginModal = ({ onClose, onSignIn, onSwitchToRegister }) => {
       onClose={onClose}
       ref={modalRef}
       closeIcon={CloseIcon}
-      submitText={loading ? "Signing In..." : "Login"}
-      secondaryText="or Register"
-      secondaryAction={onSwitchToRegister}
-      isLoading={loading}
+      hideSubmit={true} // hide default submit button
     >
       {error && <p className="modal-error">{error}</p>}
 
@@ -98,6 +100,25 @@ const LoginModal = ({ onClose, onSignIn, onSwitchToRegister }) => {
           placeholder="Enter your password"
         />
       </label>
+
+      {/* Login + Register buttons */}
+      <div className="modal__actions">
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={handleSubmit}
+          disabled={loading}
+        >
+          {loading ? "Signing In..." : "Login"}
+        </button>
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={handleSwitchToRegister}
+        >
+          or Register
+        </button>
+      </div>
     </ModalWithForm>
   );
 };

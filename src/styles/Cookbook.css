@@ -13,18 +13,16 @@
   z-index: 1000;
 }
 
-/* Notification Types */
 .cookbook__notification.add {
-  background-color: #4caf50; /* green */
+  background-color: #4caf50;
 }
 .cookbook__notification.edit {
-  background-color: #2196f3; /* blue */
+  background-color: #2196f3;
 }
 .cookbook__notification.delete {
-  background-color: #f44336; /* red */
+  background-color: #f44336;
 }
 
-/* Cookbook list actions */
 .cookbook-actions button {
   margin-left: 8px;
   padding: 6px 12px;
@@ -39,7 +37,6 @@
   opacity: 0.85;
 }
 
-/* Show More button */
 .cookbook__show-more {
   display: block;
   margin: 16px auto;
@@ -59,9 +56,8 @@
   transform: translateY(-2px);
 }
 
-/* EditRecipeConfirm modal */
 .edit-recipe-confirm {
-  background-color: #ff9800; /* orange to distinguish */
+  background-color: #ff9800;
   color: #fff;
   padding: 20px;
   border-radius: 10px;
@@ -95,17 +91,107 @@
   color: #fff;
 }
 
-/* Animations for notifications */
-@keyframes slideIn {
-  to {
-    opacity: 1;
-    transform: translateY(0);
+/* Tablet: 768px - 1024px */
+@media (max-width: 1024px) {
+  .cookbook__notification {
+    bottom: 16px;
+    right: 16px;
+    padding: 10px 18px;
+    font-size: 0.95rem;
+  }
+
+  .cookbook__show-more {
+    padding: 9px 18px;
+    font-size: 0.95rem;
+  }
+
+  .edit-recipe-confirm {
+    padding: 18px;
+    width: 350px;
+  }
+
+  .edit-recipe-confirm h2 {
+    font-size: 1.3rem;
+    margin-bottom: 14px;
+  }
+
+  .edit-recipe-confirm p {
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+  }
+
+  .edit-recipe-confirm .modal-buttons button {
+    padding: 7px 14px;
+    font-size: 0.9rem;
   }
 }
 
-@keyframes fadeOut {
-  to {
-    opacity: 0;
-    transform: translateY(20px);
+/* iPad Portrait: ~768px */
+@media (max-width: 768px) {
+  .cookbook__notification {
+    bottom: 12px;
+    right: 12px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  .cookbook__show-more {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  .edit-recipe-confirm {
+    width: 300px;
+    padding: 16px;
+  }
+
+  .edit-recipe-confirm h2 {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+  }
+
+  .edit-recipe-confirm p {
+    margin-bottom: 18px;
+    font-size: 0.9rem;
+  }
+
+  .edit-recipe-confirm .modal-buttons button {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+}
+
+/* Mobile: 480px and below */
+@media (max-width: 480px) {
+  .cookbook__notification {
+    bottom: 8px;
+    right: 8px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+
+  .cookbook__show-more {
+    padding: 7px 14px;
+    font-size: 0.85rem;
+  }
+
+  .edit-recipe-confirm {
+    width: 260px;
+    padding: 12px;
+  }
+
+  .edit-recipe-confirm h2 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+
+  .edit-recipe-confirm p {
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+  }
+
+  .edit-recipe-confirm .modal-buttons button {
+    padding: 5px 10px;
+    font-size: 0.8rem;
   }
 }

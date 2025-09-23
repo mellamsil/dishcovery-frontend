@@ -1,0 +1,48 @@
+.dashboard__sidebar {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sidebar__user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebar__user img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.sidebar__user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar__user-name {
+  font-weight: 600;
+  margin: 0;
+}
+
+.sidebar__cookbook-label {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.sidebar__add-btn {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.sidebar__recipes {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

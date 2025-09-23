@@ -256,58 +256,136 @@
 }
 
 /* --- Responsive Breakpoints --- */
-
-/* iPad / Tablets */
-@media (max-width: 768px) {
+/* Tablet: 768px - 1024px */
+@media (max-width: 1024px) {
   .modal {
-    max-width: 450px;
+    max-width: 350px;
     padding: 20px;
+  }
+
+  .modal-header {
+    font-size: 1.15rem;
+    padding: 0.8rem;
   }
 
   .modal-title {
     font-size: 17px;
+    margin-bottom: 14px;
   }
 
-  .modal-actions {
-    gap: 6px;
+  .modal input,
+  .modal textarea,
+  .modal label {
+    font-size: 13px;
+    padding: 7px;
   }
 
-  .btn-primary,
-  .btn-cancel {
-    font-size: 14px;
-    padding: 8px 12px;
+  .modal button {
+    padding: 7px 12px;
+    font-size: 13px;
+  }
+
+  .modal-footer {
+    gap: 0.4rem;
+  }
+
+  .checkbox-row .checkbox-text {
+    font-size: 12px;
   }
 }
 
-/* Mobile devices */
-@media (max-width: 480px) {
+/* iPad Portrait: ~768px */
+@media (max-width: 768px) {
   .modal {
-    max-width: 95%;
+    max-width: 300px;
     padding: 16px;
+  }
+
+  .modal-header {
+    font-size: 1.1rem;
+    padding: 0.6rem;
   }
 
   .modal-title {
     font-size: 16px;
+    margin-bottom: 12px;
   }
 
-  .modal-actions {
+  .modal input,
+  .modal textarea,
+  .modal label {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  .modal button {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .modal-footer {
     flex-direction: column;
     align-items: stretch;
-    gap: 6px;
-  }
-
-  .btn-primary,
-  .btn-cancel {
-    width: 100%;
-    text-align: center;
-  }
-
-  .checkbox-row {
-    flex-direction: row;
-    gap: 6px;
+    gap: 0.5rem;
   }
 
   .checkbox-row .checkbox-text {
-    font-size: 14px;
+    font-size: 11px;
+  }
+}
+
+/* Mobile: 480px and below */
+@media (max-width: 480px) {
+  .modal-overlay {
+    padding: 8px;
+  }
+
+  .modal {
+    max-width: 260px;
+    padding: 12px;
+    border-radius: 6px;
+  }
+
+  .modal-header {
+    font-size: 1rem;
+    padding: 0.5rem;
+  }
+
+  .modal-title {
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+
+  .modal input,
+  .modal textarea,
+  .modal label {
+    font-size: 11px;
+    padding: 5px;
+  }
+
+  .modal button {
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.4rem;
+  }
+
+  .checkbox-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .checkbox-row .checkbox-text {
+    font-size: 10px;
+  }
+
+  .modal-close-icon,
+  .modal-close-button img {
+    width: 18px;
+    height: 18px;
   }
 }

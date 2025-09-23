@@ -12,9 +12,38 @@
   text-align: center;
 }
 
-/* Responsive tweaks */
+/* Tablet: 768px - 1024px */
+@media (max-width: 1024px) {
+  .recipe-list {
+    gap: 0.8rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+
+  .recipe-list__empty {
+    font-size: 0.95rem;
+  }
+}
+
+/* iPad Portrait: ~768px */
+@media (max-width: 768px) {
+  .recipe-list {
+    gap: 0.7rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .recipe-list__empty {
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobile: 480px and below */
 @media (max-width: 480px) {
   .recipe-list {
-    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    grid-template-columns: 1fr; /* single column for small screens */
+  }
+
+  .recipe-list__empty {
+    font-size: 0.85rem;
   }
 }

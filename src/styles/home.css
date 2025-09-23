@@ -13,7 +13,7 @@
 /* ===== Hero Section (2x2 Grid) ===== */
 .hero {
   display: grid;
-  grid-template-columns: 1fr 2fr; /* left smaller, right larger */
+  grid-template-columns: 1fr 2fr;
   grid-template-rows: auto auto;
   gap: 24px;
   max-width: 1200px;

@@ -15,6 +15,7 @@ const ModalWithForm = forwardRef(
       closeIcon,
       submitClassName,
       isDirty = false,
+      hideSubmit = false, // NEW PROP
     },
     ref
   ) => {
@@ -50,31 +51,33 @@ const ModalWithForm = forwardRef(
             {children}
 
             {/* Buttons side by side */}
-            <div
-              className="modal-actions"
-              style={{ display: "flex", gap: "10px" }}
-            >
-              <button
-                type="submit"
-                className={`btn-primary ${isDirty ? "btn-primary-dirty" : ""} ${
-                  submitClassName || ""
-                }`}
-                disabled={isLoading}
+            {!hideSubmit && ( // Only render if hideSubmit is false
+              <div
+                className="modal-actions"
+                style={{ display: "flex", gap: "10px" }}
               >
-                {isLoading ? "Loading..." : submitText}
-              </button>
-
-              {secondaryText && secondaryAction && (
                 <button
-                  type="button"
-                  className="btn-cancel"
-                  onClick={secondaryAction}
+                  type="submit"
+                  className={`btn-primary ${
+                    isDirty ? "btn-primary-dirty" : ""
+                  } ${submitClassName || ""}`}
                   disabled={isLoading}
                 >
-                  {secondaryText}
+                  {isLoading ? "Loading..." : submitText}
                 </button>
-              )}
-            </div>
+
+                {secondaryText && secondaryAction && (
+                  <button
+                    type="button"
+                    className="btn-cancel"
+                    onClick={secondaryAction}
+                    disabled={isLoading}
+                  >
+                    {secondaryText}
+                  </button>
+                )}
+              </div>
+            )}
           </form>
         </div>
       </div>
