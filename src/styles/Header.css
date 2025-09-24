@@ -1,5 +1,5 @@
 .header {
-  background-color: #fffaf0; /* clean background */
+  background-color: #fffaf0;
   color: #333;
   padding: 10px 0;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -12,10 +12,11 @@
   padding: 0 12px;
   display: flex;
   align-items: center;
-  justify-content: space-between; /* Dishcovery left, actions right */
+  justify-content: space-between;
   gap: 0;
 }
 
+/* Logo / Title */
 .header__title a {
   text-decoration: none;
   background-color: #ff6f61;
@@ -26,21 +27,26 @@
   color: white;
   text-align: left;
   display: inline-block;
+  transition: transform 0.2s ease;
 }
 
+.header__title a:hover {
+  transform: scale(1.05);
+}
+
+/* Navigation / Actions */
 .header__actions {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
-/* Buttons next to avatar */
+/* User buttons / avatar */
 .header__user {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-
 .header__user button {
   padding: 4px 10px;
   background-color: #ff6f61;
@@ -49,14 +55,39 @@
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
-
 .header__user button:hover {
   background-color: #e85c50;
+  transform: translateY(-1px);
 }
 
-/* Avatar container */
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Links */
+.header-link {
+  color: #333;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  position: relative;
+}
+
+/* Separator */
+.header-link:not(:last-child)::after {
+  content: "|";
+  margin: 0 8px; /* spacing around separator */
+  color: #aaa;
+}
+
+.header-link:hover {
+  color: #ff6f61;
+}
+
 .avatar {
   width: 40px;
   height: 40px;
@@ -67,10 +98,9 @@
 /* Unauthenticated nav buttons */
 .nav {
   display: flex;
-  gap: 10px; /* space between buttons */
+  gap: 10px;
   justify-content: space-around;
 }
-
 .nav button {
   padding: 6px 10px;
   background-color: #ff6f61;
@@ -79,29 +109,35 @@
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
-
 .nav button:hover {
   background-color: #e85c50;
+  transform: translateY(-1px);
 }
-
 .btn-disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-/* Responsive adjustments for tablets and mobile */
+/* Hamburger menu button for mobile */
+.hamburger {
+  display: none;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Responsive adjustments */
 @media (max-width: 1024px) {
   .header__title a {
     font-size: 24px;
     padding: 5px 12px;
   }
-
   .header__actions {
     gap: 8px;
   }
-
   .nav button,
   .header__user button {
     font-size: 13px;
@@ -115,26 +151,40 @@
     align-items: center;
     justify-content: space-between;
   }
-
   .header__user span {
     display: none; /* hide name/email on small screens */
   }
-
   .header__actions {
-    display: flex;
-    align-items: center;
     gap: 6px;
   }
-
   .nav button,
   .header__user button {
     padding: 3px 6px;
     font-size: 12px;
   }
-
   .avatar {
     width: 32px;
     height: 32px;
+  }
+  /* Show hamburger */
+  .hamburger {
+    display: block;
+  }
+  .nav {
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    background-color: #fffaf0;
+    position: absolute;
+    top: 60px;
+    right: 12px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  .nav.open {
+    display: flex;
   }
 }
 
@@ -143,17 +193,14 @@
     font-size: 20px;
     padding: 4px 10px;
   }
-
   .header__actions {
     gap: 4px;
   }
-
   .nav button,
   .header__user button {
     padding: 2px 6px;
     font-size: 11px;
   }
-
   .avatar {
     width: 28px;
     height: 28px;
