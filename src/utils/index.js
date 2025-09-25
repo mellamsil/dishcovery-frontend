@@ -1,7 +1,7 @@
 import * as apiMock from "./api.mock";
 import * as apiReal from "./api";
 
-const useMock = true;
+const useMock = import.meta.env.VITE_USE_MOCK === "true";
 
 const apiModule = useMock ? apiMock : apiReal;
 

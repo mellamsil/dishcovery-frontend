@@ -1,44 +1,25 @@
 import React from "react";
 import "../styles/SideBar.css";
 
-const SideBar = ({ currentUser, userRecipes, onAddItem }) => {
+const SideBar = ({ currentUser, userRecipes = [] }) => {
+  const avatarSrc = currentUser?.avatar || "/src/assets/images/placeholder.png";
+
+  const fullName = currentUser?.name || "Anonymous User";
+
   return (
-    <aside className="sidebar">
-      {/* User Info */}
-      <div className="user-info">
-        <img
-          src={currentUser.avatar || "/src/assets/images/placeholder.png"}
-          alt={`${currentUser.name}'s avatar`}
-          className="user-avatar"
-        />
-        <div className="user-details">
-          <span className="user-name">{currentUser.name}</span>
-          <span className="my-cookbook">My Cookbook</span>
-        </div>
-      </div>
+    <aside className="sidebar dashboard__sidebar">
+      {/* Avatar */}
+      <img
+        src={avatarSrc}
+        alt={`${fullName}'s avatar`}
+        className="sidebar__avatar avatar"
+      />
 
-      {/* Add Item Button */}
-      <div className="actions">
-        <button className="add-item-btn" onClick={onAddItem}>
-          Add Item or Recipe
-        </button>
-      </div>
+      {/* Name */}
+      <p className="sidebar__name">{fullName}</p>
 
-      {/* User Recipes */}
-      <div className="recipes-list">
-        {userRecipes.map((recipe) => (
-          <div key={recipe.id} className="recipe-item">
-            <img
-              src={recipe.image || "/src/assets/images/placeholder.png"}
-              alt={recipe.title}
-              className="recipe-image"
-            />
-            <div className="recipe-info">
-              <span className="recipe-title">{recipe.title}</span>
-            </div>
-          </div>
-        ))}
-      </div>
+      {/* Total Recipes */}
+      <p className="sidebar__total">Total Recipes: {userRecipes.length}</p>
     </aside>
   );
 };

@@ -47,6 +47,66 @@
   align-items: center;
   gap: 8px;
 }
+
+.header__user-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+/* Avatar + Name row */
+.header__user-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header__user-top .avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ff6f61;
+  transition: transform 0.2s ease;
+}
+
+.header__user-top .avatar:hover {
+  transform: scale(1.05);
+}
+
+.header__user-top .user-name {
+  font-weight: 600;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Links row: Profile, Dashboard, Sign Out */
+.header__user-links {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.header__user-links a,
+.header__user-links button {
+  font-size: 14px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: none;
+  background-color: #ff6f61;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  text-decoration: none;
+}
+
+.header__user-links a:hover,
+.header__user-links button:hover {
+  background-color: #e85c50;
+  transform: translateY(-1px);
+}
+
 .header__user button {
   padding: 4px 10px;
   background-color: #ff6f61;
@@ -65,12 +125,12 @@
 .header-nav {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 24px;
 }
 
 /* Links */
 .header-link {
-  color: #333;
+  color: #ff6f61;
   font-weight: 500;
   text-decoration: none;
   transition: color 0.2s ease;
@@ -115,6 +175,18 @@
   background-color: #e85c50;
   transform: translateY(-1px);
 }
+
+.nav-link {
+  color: #ff6f61;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: #666;
+}
+
 .btn-disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -127,6 +199,70 @@
   background: none;
   border: none;
   cursor: pointer;
+}
+
+/* Avatar / User Dropdown */
+.user-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.user-menu .user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ff6f61;
+  transition: transform 0.2s ease;
+}
+
+.user-menu .user-avatar:hover {
+  transform: scale(1.05);
+}
+
+/* Dropdown container */
+.user-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: #fffaf0;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  z-index: 1000;
+}
+
+/* Dropdown items */
+.user-dropdown .user-name {
+  font-weight: 600;
+  padding: 6px 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.user-dropdown .dropdown-link,
+.user-dropdown .signout-btn {
+  padding: 8px 16px;
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+  text-align: left;
+  background: none;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.user-dropdown .dropdown-link:hover,
+.user-dropdown .signout-btn:hover {
+  background-color: #ffebdf;
+  color: #ff6f61;
 }
 
 /* Responsive adjustments */
@@ -157,6 +293,20 @@
   .header__actions {
     gap: 6px;
   }
+
+  .header__user-top .avatar {
+    width: 32px;
+    height: 32px;
+  }
+  .header__user-top .user-name {
+    font-size: 14px;
+  }
+  .header__user-links a,
+  .header__user-links button {
+    font-size: 12px;
+    padding: 3px 6px;
+  }
+
   .nav button,
   .header__user button {
     padding: 3px 6px;
@@ -186,6 +336,25 @@
   .nav.open {
     display: flex;
   }
+
+  .user-menu .user-avatar {
+    width: 32px;
+    height: 32px;
+  }
+  .user-dropdown {
+    top: 40px;
+    right: 0;
+    min-width: 140px;
+  }
+  .user-dropdown .dropdown-link,
+  .user-dropdown .signout-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+  .user-dropdown .user-name {
+    padding: 4px 12px;
+    font-size: 13px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -196,6 +365,20 @@
   .header__actions {
     gap: 4px;
   }
+
+  .header__user-top .avatar {
+    width: 28px;
+    height: 28px;
+  }
+  .header__user-top .user-name {
+    font-size: 12px;
+  }
+  .header__user-links a,
+  .header__user-links button {
+    font-size: 11px;
+    padding: 2px 4px;
+  }
+
   .nav button,
   .header__user button {
     padding: 2px 6px;
@@ -204,5 +387,23 @@
   .avatar {
     width: 28px;
     height: 28px;
+  }
+
+  .user-menu .user-avatar {
+    width: 28px;
+    height: 28px;
+  }
+  .user-dropdown {
+    top: 36px;
+    min-width: 120px;
+  }
+  .user-dropdown .dropdown-link,
+  .user-dropdown .signout-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+  .user-dropdown .user-name {
+    padding: 3px 10px;
+    font-size: 12px;
   }
 }

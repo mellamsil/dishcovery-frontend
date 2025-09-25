@@ -1,3 +1,81 @@
+.cookbook {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* === Header === */
+.cookbook__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.cookbook__add-btn {
+  padding: 8px 16px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.cookbook__add-btn:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+/* === Recipe List === */
+.cookbook-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cookbook-item {
+  display: flex;
+  align-items: flex-start;
+  background: #f9f9f9;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: background 0.2s;
+}
+
+.cookbook-item:hover {
+  background: #f0f0f0;
+}
+
+.cookbook-item__image {
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 6px 0 0 6px;
+  flex-shrink: 0;
+}
+
+.cookbook-item__content {
+  flex: 1;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cookbook-item__title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 6px;
+  color: #222;
+}
+
+/* === Notification Toast === */
 .cookbook__notification {
   position: fixed;
   bottom: 20px;
@@ -23,6 +101,12 @@
   background-color: #f44336;
 }
 
+/* === Actions (Edit & Remove) === */
+.cookbook-actions {
+  display: flex;
+  gap: 8px;
+}
+
 .cookbook-actions button {
   margin-left: 8px;
   padding: 6px 12px;
@@ -37,6 +121,35 @@
   opacity: 0.85;
 }
 
+.cookbook-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #fff;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.cookbook-btn.edit {
+  background-color: #2196f3;
+}
+
+.cookbook-btn.edit:hover {
+  background-color: #1976d2;
+  transform: translateY(-2px);
+}
+
+.cookbook-btn.delete {
+  background-color: #f44336;
+}
+
+.cookbook-btn.delete:hover {
+  background-color: #d32f2f;
+  transform: translateY(-2px);
+}
+
+/* === Show More Button === */
 .cookbook__show-more {
   display: block;
   margin: 16px auto;
@@ -56,6 +169,7 @@
   transform: translateY(-2px);
 }
 
+/* === Edit Recipe Confirmation Modal === */
 .edit-recipe-confirm {
   background-color: #ff9800;
   color: #fff;
@@ -91,8 +205,33 @@
   color: #fff;
 }
 
-/* Tablet: 768px - 1024px */
+/* === Animations === */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+/* === Responsiveness === */
+
+/* Tablet (768px - 1024px) */
 @media (max-width: 1024px) {
+  .cookbook {
+    padding: 16px;
+  }
+
   .cookbook__notification {
     bottom: 16px;
     right: 16px;
@@ -126,8 +265,28 @@
   }
 }
 
-/* iPad Portrait: ~768px */
+/* iPad Portrait (~768px) */
 @media (max-width: 768px) {
+  .cookbook-item {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cookbook-item__image {
+    width: 100%;
+    height: 180px;
+    border-radius: 6px 6px 0 0;
+  }
+
+  .cookbook-item__content {
+    align-items: center;
+    text-align: center;
+  }
+
+  .cookbook-actions {
+    justify-content: center;
+  }
+
   .cookbook__notification {
     bottom: 12px;
     right: 12px;
@@ -161,8 +320,12 @@
   }
 }
 
-/* Mobile: 480px and below */
+/* Mobile (480px and below) */
 @media (max-width: 480px) {
+  .cookbook {
+    padding: 12px;
+  }
+
   .cookbook__notification {
     bottom: 8px;
     right: 8px;

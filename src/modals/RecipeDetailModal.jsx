@@ -1,37 +1,69 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/modal.css";
 
 function RecipeDetailModal({ recipe, isSaving, onClose, onSave }) {
+  const [closing, setClosing] = useState(false);
+
   if (!recipe) return null;
 
+  useEffect(() => {
+    const handleEsc = (event) => {
+      if (event.key === "Escape") handleClose();
+    };
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, []);
+
+  const handleClose = () => {
+    setClosing(true);
+    setTimeout(() => onClose(), 250); // match animation duration
+  };
+
   return (
-    <div className="modal-overlay">
-      <div className="modal">
-        <h2 className="modal__title">{recipe.title}</h2>
+    <div
+      className={`modal-overlay ${closing ? "fade-out" : ""}`}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="recipe-title"
+      aria-describedby="recipe-description"
+      onClick={(e) => {
+        if (e.target.classList.contains("modal-overlay")) handleClose();
+      }}
+    >
+      <div className={`modal ${closing ? "fade-out" : ""}`}>
+        <button
+          className="btn-cancel modal-close-button"
+          onClick={handleClose}
+          aria-label="Close modal"
+        >
+          ×
+        </button>
+
+        <h2 className="modal-title" id="recipe-title">
+          {recipe.title}
+        </h2>
 
         {recipe.image && (
-          <img src={recipe.image} alt={recipe.title} className="modal__image" />
+          <img src={recipe.image} alt={recipe.title} className="modal-image" />
         )}
 
-        <p className="modal__description">{recipe.description || ""}</p>
+        <p className="modal-description" id="recipe-description">
+          {recipe.description || "No description available."}
+        </p>
+
         {recipe.cookingTime && (
-          <p className="modal__time">Cooking time: {recipe.cookingTime} mins</p>
+          <p className="modal-time">Cooking time: {recipe.cookingTime} mins</p>
         )}
 
-        <div className="modal__actions">
+        <div className="modal-footer">
           <button
-            className="btn-primary"
+            className="btn-primary btn-primary-dirty"
             onClick={() => onSave(recipe)}
             disabled={isSaving}
-            aria-label={`Save ${recipe.title} to cookbook`}
           >
             {isSaving ? "Saving..." : "Save to Cookbook"}
           </button>
-          <button
-            className="btn-cancel"
-            onClick={onClose}
-            aria-label="Close modal"
-          >
+          <button className="btn-cancel" onClick={handleClose}>
             Close
           </button>
         </div>

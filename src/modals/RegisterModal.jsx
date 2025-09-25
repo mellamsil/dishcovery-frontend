@@ -65,14 +65,8 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
     const validationError = validateForm();
     if (validationError) return setError(validationError);
 
-    if (!onSignUp || typeof onSignUp !== "function") {
-      setError("Sign up function is not available.");
-      return;
-    }
-
     setLoading(true);
     onSignUp(form)
-      .then(() => onClose())
       .catch((err) => setError(err?.message || "Registration failed"))
       .finally(() => setLoading(false));
   };
@@ -183,7 +177,7 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
       </div>
 
       {/* Register + Sign In buttons */}
-      <div className="modal__actions">
+      <div className="modal__actions modal__actions--inline">
         <button
           type="button"
           className="btn btn-primary"

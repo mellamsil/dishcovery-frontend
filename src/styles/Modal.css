@@ -10,6 +10,8 @@
   align-items: center;
   z-index: 999;
   padding: 12px;
+  opacity: 0;
+  animation: fadeInOverlay 0.25s forwards;
 }
 
 .modal {
@@ -22,11 +24,14 @@
   width: 100%;
   text-align: left;
   box-sizing: border-box;
+  transform: translateY(-20px);
+  opacity: 0;
+  animation: slideDownModal 0.25s forwards;
 }
 
 .modal-header {
   display: flex;
-  justify-content: space-between; /* title left, close button right */
+  justify-content: space-between;
   align-items: center;
   padding: 1rem;
   border-bottom: 1px solid #e5e5e5;
@@ -36,9 +41,11 @@
 
 .modal-footer {
   display: flex;
-  justify-content: flex-end; /* right-align buttons */
-  gap: 0.5rem; /* space between buttons */
-  margin-top: 1rem;
+  justify-content: flex-end; /* buttons aligned to the right */
+  align-items: center;
+  gap: 12px; /* space between buttons */
+  margin-top: 16px;
+  flex-wrap: wrap; /* wrap on small screens */
 }
 
 .modal-primary-button {
@@ -146,13 +153,15 @@
   color: #333;
 }
 
-.modal__actions .btn {
-  min-width: 120px;
-}
-
+/* Primary / submit button */
 .btn-primary {
   background-color: #007bff;
   color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
 }
 
 .btn-secondary {
@@ -161,11 +170,32 @@
 }
 
 .modal-actions {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 16px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
   margin-top: 24px;
+  padding: 0;
+}
+
+.modal__actions--inline {
+  display: inline-flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  margin-top: 16px;
+  padding: 0;
+}
+
+.modal__actions--inline .btn {
+  min-width: 0;
+  padding: 8px 16px;
+}
+
+.modal__actions .btn {
+  min-width: 0;
+  padding: 8px 16px;
 }
 
 .modal button {
@@ -184,12 +214,18 @@
   color: white;
   transition: background-color 0.3s ease, color 0.3s ease;
   opacity: 0.9;
-  border: none;
+  font-weight: 700;
   padding: 8px 16px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
   cursor: pointer;
+  gap: 24px;
 }
 
-/* Blue after changes */
+.btn-cancel:hover {
+  background-color: #f0f0f0;
+}
+
 .btn-primary.btn-primary-dirty {
   background-color: #007bff;
 }
@@ -212,7 +248,6 @@
   color: #333;
 }
 
-/* Progression button colors */
 .btn-progress-0 {
   background-color: #ccc;
   color: #333;
@@ -238,7 +273,6 @@
   transition: background-color 0.4s ease;
 }
 
-/* Secondary text button */
 .btn-secondary-text {
   background: transparent;
   border: none;
@@ -253,6 +287,40 @@
 
 .btn-secondary-text:hover {
   color: #333;
+}
+
+@keyframes fadeInOverlay {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDownModal {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-overlay.fade-out {
+  animation: fadeOutOverlay 0.25s forwards;
+}
+
+.modal.fade-out {
+  animation: slideUpModal 0.25s forwards;
+}
+
+@keyframes fadeOutOverlay {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slideUpModal {
+  to {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
 }
 
 /* --- Responsive Breakpoints --- */

@@ -8,20 +8,18 @@ function AddItem({ item, onClose, onAdd }) {
   const [notes, setNotes] = useState("");
   const [saving, setSaving] = useState(false);
 
-  // --- Mock saveRecipe function ---
   const saveRecipe = (recipe) => {
     return new Promise((resolve) => {
       setTimeout(() => {
         const saved = {
           ...recipe,
-          _id: recipe._id || Date.now().toString(), // mock ID
+          _id: recipe._id || Date.now().toString(),
         };
         resolve({ success: true, saved });
-      }, 700); // simulate network delay
+      }, 700);
     });
   };
 
-  // Pre-fill form if editing
   useEffect(() => {
     if (item) {
       setTitle(item.title || "");
@@ -41,7 +39,7 @@ function AddItem({ item, onClose, onAdd }) {
     if (!title.trim()) return;
 
     const newItem = {
-      _id: item?._id || undefined, // undefined for new recipe
+      _id: item?._id || undefined,
       title: title.trim(),
       description: description.trim(),
       instructions: instructions.trim(),
@@ -53,7 +51,7 @@ function AddItem({ item, onClose, onAdd }) {
     saveRecipe(newItem).then((res) => {
       setSaving(false);
       if (res.success) {
-        onAdd(res.saved); // pass saved recipe back
+        onAdd(res.saved);
         onClose();
       }
     });
@@ -65,14 +63,23 @@ function AddItem({ item, onClose, onAdd }) {
       onClose={onClose}
       onSubmit={handleSubmit}
       submitText={saving ? "Saving..." : item ? "Save Changes" : "Add Recipe"}
-      secondaryText="Cancel"
       disabled={saving}
     >
+      {/* Close icon at top left */}
+      <button
+        type="button"
+        className="modal-close-icon"
+        onClick={onClose}
+        aria-label="Close"
+      >
+        &times;
+      </button>
+
+      {/* Form fields */}
       <label>
         Title:
         <input
           type="text"
-          name="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Enter recipe title"
@@ -84,7 +91,6 @@ function AddItem({ item, onClose, onAdd }) {
       <label>
         Description:
         <textarea
-          name="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Brief description"
@@ -95,7 +101,6 @@ function AddItem({ item, onClose, onAdd }) {
       <label>
         Instructions:
         <textarea
-          name="instructions"
           value={instructions}
           onChange={(e) => setInstructions(e.target.value)}
           placeholder="Step by step instructions"
@@ -106,13 +111,27 @@ function AddItem({ item, onClose, onAdd }) {
       <label>
         Notes:
         <textarea
-          name="notes"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Personal notes or tips"
           disabled={saving}
         />
       </label>
+
+      {/* Footer buttons */}
+      <div className="modal-actions">
+        <button type="submit" className="btn-primary" disabled={saving}>
+          {saving ? "Saving..." : item ? "Save Changes" : "Add Recipe"}
+        </button>
+        <button
+          type="button"
+          className="btn-cancel"
+          onClick={onClose}
+          disabled={saving}
+        >
+          Cancel
+        </button>
+      </div>
     </ModalWithForm>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetchData, saveRecipe, deleteRecipe } from "../utils"; // using api.mock.js or api.js
+import { fetchData, saveRecipe, deleteRecipe } from "../utils/api.mock.js"; // Switch to api.js in production
 import AddItem from "./AddItem";
 import DeleteConfirm from "./DeleteConfirm";
 import EditRecipeConfirm from "./EditRecipeConfirm";
@@ -9,38 +9,36 @@ import "../styles/Cookbook.css";
 
 function Cookbook({ isSignedIn }) {
   const [recipes, setRecipes] = useState([]);
-  const [activeItem, setActiveItem] = useState(null); // current recipe
+  const [activeItem, setActiveItem] = useState(null);
   const [showAdd, setShowAdd] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [showEditConfirm, setShowEditConfirm] = useState(false);
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState("");
-  const [notificationType, setNotificationType] = useState("add"); // "add" | "edit" | "delete"
-  const [visibleCount, setVisibleCount] = useState(3); // incremental rendering
+  const [notificationType, setNotificationType] = useState("add");
+  const [visibleCount, setVisibleCount] = useState(3);
 
-  // Load from mock API on mount
+  // Load cookbook from API
   useEffect(() => {
     setLoading(true);
     fetchData("cookbook")
       .then((res) => {
         if (res.success) setRecipes(res.data);
-        setLoading(false);
       })
-      .catch(() => {
-        setLoading(false);
-      });
+      .finally(() => setLoading(false));
   }, []);
 
   const handleAddOrEdit = (item) => {
     saveRecipe(item).then((res) => {
       if (res.success) {
         const updated = res.saved;
-        setRecipes((prev) => {
-          const exists = prev.some((r) => r._id === updated._id);
-          return exists
+        const exists = recipes.some((r) => r._id === updated._id);
+
+        setRecipes((prev) =>
+          exists
             ? prev.map((r) => (r._id === updated._id ? updated : r))
-            : [...prev, updated];
-        });
+            : [...prev, updated]
+        );
 
         setNotification(
           exists
@@ -67,24 +65,35 @@ function Cookbook({ isSignedIn }) {
     });
   };
 
+  // Prevent access if not signed in
   if (!isSignedIn) {
-    return <p>Please sign in to access your cookbook.</p>;
+    return (
+      <p className="cookbook__signin-msg">
+        Please sign in to access your cookbook.
+      </p>
+    );
   }
 
   const displayedRecipes = recipes.slice(0, visibleCount);
 
   return (
     <div className="cookbook">
-      <h2>My Cookbook</h2>
-      <button
-        onClick={() => {
-          setShowAdd(true);
-          setActiveItem(null);
-        }}
-      >
-        Add Recipe
-      </button>
+      {/* Header */}
+      <div className="cookbook__header">
+        <h2>My Cookbook</h2>
+        <button
+          className="cookbook__add-btn"
+          onClick={() => {
+            setShowAdd(true);
+            setActiveItem(null);
+          }}
+          aria-label="Add a new recipe"
+        >
+          + Add Recipe
+        </button>
+      </div>
 
+      {/* Main Content */}
       {loading ? (
         <Preloader text="Loading your cookbook..." />
       ) : recipes.length === 0 ? (
@@ -94,13 +103,12 @@ function Cookbook({ isSignedIn }) {
           <ul className="cookbook-list">
             {displayedRecipes.map((r) => (
               <li key={r._id} className="cookbook-item">
-                {r.image && (
-                  <img
-                    src={r.image}
-                    alt={r.title}
-                    className="cookbook-item__image"
-                  />
-                )}
+                <img
+                  src={r.image || "/images/placeholder.png"}
+                  alt={r.title}
+                  className="cookbook-item__image"
+                  onError={(e) => (e.target.src = "/images/placeholder.png")}
+                />
                 <div className="cookbook-item__content">
                   <strong className="cookbook-item__title">{r.title}</strong>
                   <div className="cookbook-actions">
@@ -110,6 +118,7 @@ function Cookbook({ isSignedIn }) {
                         setActiveItem(r);
                         setShowEditConfirm(true);
                       }}
+                      aria-label={`Edit ${r.title}`}
                     >
                       Edit
                     </button>
@@ -119,6 +128,7 @@ function Cookbook({ isSignedIn }) {
                         setActiveItem(r);
                         setShowDelete(true);
                       }}
+                      aria-label={`Remove ${r.title}`}
                     >
                       Remove
                     </button>
@@ -132,6 +142,7 @@ function Cookbook({ isSignedIn }) {
             <button
               className="cookbook__show-more"
               onClick={() => setVisibleCount((prev) => prev + 3)}
+              aria-label="Show more recipes"
             >
               Show more
             </button>
@@ -139,7 +150,8 @@ function Cookbook({ isSignedIn }) {
         </>
       )}
 
-      {/* Edit Confirmation Modal */}
+      {/* ===== Modals ===== */}
+
       {showEditConfirm && activeItem && (
         <EditRecipeConfirm
           item={activeItem}
@@ -151,7 +163,6 @@ function Cookbook({ isSignedIn }) {
         />
       )}
 
-      {/* Add/Edit Modal */}
       {showAdd && (
         <AddItem
           item={activeItem}
@@ -160,7 +171,6 @@ function Cookbook({ isSignedIn }) {
         />
       )}
 
-      {/* Delete Confirmation Modal */}
       {showDelete && activeItem && (
         <DeleteConfirm
           item={activeItem}
@@ -169,9 +179,13 @@ function Cookbook({ isSignedIn }) {
         />
       )}
 
-      {/* Notification Toast */}
+      {/* ===== Notification Toast ===== */}
       {notification && (
-        <div className={`cookbook__notification ${notificationType}`}>
+        <div
+          className={`cookbook__notification ${notificationType}`}
+          role="status"
+          aria-live="polite"
+        >
           {notification}
         </div>
       )}

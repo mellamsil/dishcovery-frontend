@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 import "../styles/modal.css";
 import CloseIcon from "../assets/icons/close.svg";
 import ModalWithForm from "./ModalWithForm";
@@ -59,7 +60,6 @@ const LoginModal = ({ onClose, onSignIn, onSwitchToRegister }) => {
       .finally(() => setLoading(false));
   };
 
-  // Safe wrapper for "or Register"
   const handleSwitchToRegister = () => {
     if (onSwitchToRegister && typeof onSwitchToRegister === "function") {
       onSwitchToRegister();
@@ -75,9 +75,13 @@ const LoginModal = ({ onClose, onSignIn, onSwitchToRegister }) => {
       onClose={onClose}
       ref={modalRef}
       closeIcon={CloseIcon}
-      hideSubmit={true} // hide default submit button
+      hideSubmit={true}
     >
-      {error && <p className="modal-error">{error}</p>}
+      {error && (
+        <p className="modal-error" aria-live="polite">
+          {error}
+        </p>
+      )}
 
       <label>
         Email
@@ -87,6 +91,7 @@ const LoginModal = ({ onClose, onSignIn, onSwitchToRegister }) => {
           value={form.email}
           onChange={handleChange}
           placeholder="Enter your email"
+          required
         />
       </label>
 
@@ -98,11 +103,12 @@ const LoginModal = ({ onClose, onSignIn, onSwitchToRegister }) => {
           value={form.password}
           onChange={handleChange}
           placeholder="Enter your password"
+          required
+          minLength="8"
         />
       </label>
 
-      {/* Login + Register buttons */}
-      <div className="modal__actions">
+      <div className="modal__actions modal__actions--inline">
         <button
           type="button"
           className="btn btn-primary"
@@ -121,6 +127,12 @@ const LoginModal = ({ onClose, onSignIn, onSwitchToRegister }) => {
       </div>
     </ModalWithForm>
   );
+};
+
+LoginModal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  onSignIn: PropTypes.func.isRequired,
+  onSwitchToRegister: PropTypes.func.isRequired,
 };
 
 export default LoginModal;

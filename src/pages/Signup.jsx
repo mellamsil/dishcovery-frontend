@@ -1,21 +1,24 @@
 import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import RegisterModal from "../modals/RegisterModal";
-import { CurrentUserContext, useAuth } from "../contexts/CurrentUserContext";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 const Signup = () => {
   const { signup } = useContext(CurrentUserContext);
   const [showModal, setShowModal] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Signup.jsx
+  // If redirected from PrivateRoute, get the original target
+  const from = location.state?.from?.pathname || "/dashboard";
+
   const handleSignUp = (formData) => {
     setError(null);
-    return signup(formData) // add return
+    return signup(formData)
       .then(() => {
         setShowModal(false);
-        navigate("/profile");
+        navigate(from, { replace: true }); // Redirect after signup
       })
       .catch(() => setError("Signup failed (Stage 1 demo)"));
   };

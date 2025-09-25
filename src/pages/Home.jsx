@@ -8,31 +8,80 @@ import ErrorMessage from "../components/ErrorMessage";
 import { fetchData, saveRecipe } from "../utils";
 import "../styles/Home.css";
 
+import spaghettiImg from "../assets/images/spaghetti.jpg";
+import curryImg from "../assets/images/chicken-curry.jpg";
+import saladImg from "../assets/images/caesar-salad.jpg";
+import cakeImg from "../assets/images/chocolate-cake.jpg";
+import grilledMeatImg from "../assets/images/grilled-meat.jpg";
+import redfishImg from "../assets/images/redfish.jpg";
+import shrimpImg from "../assets/images/scampi-shrimp.jpg";
+import lobsterImg from "../assets/images/lobster.jpg";
+import burritoImg from "../assets/images/burrito.jpg";
+
 // Sample mock recipes for home page
 const MOCK_RECIPES = [
   {
     _id: "1",
     title: "Spaghetti Bolognese",
-    description: "Classic Italian pasta with rich meat sauce.",
-    image: "https://via.placeholder.com/150?text=Spaghetti",
+    description:
+      "A classic Italian-American dish with a slow-simmered meat sauce made from ground beef, tomatoes, and vegetables, served over a bed of spaghetti and finished with Parmesan cheese",
+    image: spaghettiImg,
   },
   {
     _id: "2",
     title: "Chicken Curry",
-    description: "A spicy and creamy curry for every occasion.",
-    image: "https://via.placeholder.com/150?text=Curry",
+    description:
+      "A classic comfort dish of chicken and a blend of warm, traditional spices.",
+    image: curryImg,
   },
   {
     _id: "3",
     title: "Caesar Salad",
-    description: "Fresh greens with a tangy Caesar dressing.",
-    image: "https://via.placeholder.com/150?text=Salad",
+    description:
+      "A classic salad featuring crisp romaine lettuce, crunchy croutons, and shaved Parmesan cheese",
+    image: saladImg,
   },
   {
     _id: "4",
     title: "Chocolate Cake",
-    description: "Decadent chocolate cake for dessert lovers.",
-    image: "https://via.placeholder.com/150?text=Cake",
+    description:
+      "A classic chocolate cake with a moist, rich crumb and a decadent, velvety chocolate buttercream frosting.",
+    image: cakeImg,
+  },
+  {
+    _id: "5",
+    title: "Grilled Meat",
+    description:
+      "Savory grilled meat gets a zesty kick from fresh ginger, perfectly complemented by sweet, blistered tomatoes and tender, charred broccoli.",
+    image: grilledMeatImg,
+  },
+  {
+    _id: "6",
+    title: "Red Fish",
+    description:
+      "Prized for its mild, sweet flavor and firm texture, redfish is a delicious and versatile seafood option. It can be baked, fried, or prepared blackened.",
+    image: redfishImg,
+  },
+  {
+    _id: "7",
+    title: "Scampi Shrimps",
+    description:
+      "Scampi shrimp is an elegant and quick Italian-American dish featuring succulent shrimp bathed in a rich, buttery garlic sauce with a bright burst of lemon and white wine.",
+    image: shrimpImg,
+  },
+  {
+    _id: "8",
+    title: "Lobster",
+    description:
+      "This easy-to-make lobster features juicy tails bathed in a rich garlic-lemon butter sauce and finished with fresh parsley",
+    image: lobsterImg,
+  },
+  {
+    _id: "9",
+    title: "burrito",
+    description:
+      " A warm flour tortilla loaded with savory ground beef, seasoned rice, hearty beans, and melted cheese, all rolled into a satisfying handheld meal.",
+    image: burritoImg,
   },
 ];
 
@@ -46,7 +95,6 @@ function Home() {
   const [error, setError] = useState(null);
   const [visibleCount, setVisibleCount] = useState(3);
 
-  // Local search (filter cached recipes)
   const doSearch = useCallback(
     (q = query) => {
       const stored = localStorage.getItem("recipes");
@@ -63,14 +111,14 @@ function Home() {
     [query]
   );
 
-  // Fetch recipes or fallback to mock data
   useEffect(() => {
     setLoading(true);
     setError(null);
 
     fetchData("cookbook")
       .then((res) => {
-        const data = res.data?.length ? res.data : MOCK_RECIPES;
+        const data =
+          Array.isArray(res.data) && res.data.length ? res.data : MOCK_RECIPES;
         setRecipes(data);
         setVisibleCount(3);
         localStorage.setItem("recipes", JSON.stringify(data));
@@ -82,7 +130,6 @@ function Home() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Save recipe
   const handleSave = (recipe) => {
     setIsSaving(true);
     saveRecipe(recipe).then((res) => {
@@ -95,22 +142,21 @@ function Home() {
     });
   };
 
-  // Recipes to show inside the iMac screen
-  const displayedInImac = recipes.slice(0, 3);
-
-  // Recipes to show in search results grid
-  const displayedRecipes = recipes.slice(0, visibleCount);
+  const displayedInImac = Array.isArray(recipes) ? recipes.slice(0, 3) : [];
+  const displayedRecipes = Array.isArray(recipes)
+    ? recipes.slice(0, visibleCount)
+    : [];
 
   return (
     <main className="home">
       {/* Hero Section */}
       <section className="hero">
-        {/* Left Column */}
         <div className="hero__left">
           <div className="hero__left-title">
             <h2>Welcome to Dishcovery!</h2>
           </div>
           <div className="hero__left-content">
+            {/* ← KEEP THIS WELCOME MESSAGE EXACTLY AS IS → */}
             <p>
               Welcome to Dishcovery, the place where you can find your next
               culinary adventure! We are so glad you are here. Get ready to
@@ -131,11 +177,14 @@ function Home() {
             >
               <input
                 type="text"
+                className="hero__search-input" // ← added class for styling
                 placeholder="Search recipes..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
-              <button type="submit">Search</button>
+              <button type="submit" className="hero__search-button">
+                Search
+              </button>
             </form>
 
             <ul className="hero__features">
@@ -146,7 +195,6 @@ function Home() {
           </div>
         </div>
 
-        {/* Right Column */}
         <div className="hero__right">
           <div className="hero__right-title">
             <h2>Top Recipes</h2>
@@ -169,6 +217,7 @@ function Home() {
                         src={recipe.image}
                         alt={recipe.title}
                         className="imac-recipe-image"
+                        loading="lazy"
                       />
                       <div className="imac-recipe-info">
                         <h3 className="imac-recipe-title">{recipe.title}</h3>

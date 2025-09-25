@@ -19,13 +19,30 @@ function App() {
       <Header />
       <main className="main-content">
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<Signin />} />
-          <Route path="/profile" element={<Profile />} />
           <Route path="/recipe/:id" element={<RecipeDetails />} />
           <Route path="/search" element={<SearchResults />} />
-          <Route path="/favorites" element={<Favorites />} />
+
+          {/* Private Routes */}
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/favorites"
+            element={
+              <PrivateRoute>
+                <Favorites />
+              </PrivateRoute>
+            }
+          />
           <Route
             path="/dashboard"
             element={

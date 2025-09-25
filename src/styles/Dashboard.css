@@ -1,133 +1,189 @@
 .dashboard {
-  padding: 2rem;
-  min-height: 100vh;
-  background-color: #f9f9f9;
-  font-family: Arial, sans-serif;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: calc(100vh - 60px); /* header assumed ~60px */
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
+/* Sidebar */
+.dashboard__sidebar {
+  margin: 0;
+  padding: 20px;
+  background: #f4f4f8; /* subtle contrast */
+  border-right: 1px solid #ddd;
+  box-sizing: border-box;
+  height: 100%;
+  position: sticky;
+  top: 60px; /* align with header height */
+}
+
+/* Main content */
+.dashboard__main {
+  margin: 0;
+  padding: 20px;
+  background: #fff;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* Title */
 .dashboard__title {
-  font-size: 2rem;
+  font-size: 24px;
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin: 0 0 16px 0;
+  text-align: center;
   color: #333;
 }
 
+/* Buttons row */
+.dashboard__actions {
+  display: flex;
+  /* justify-content: space-between; */
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.dashboard__btn {
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.dashboard__btn.add {
+  background: #007bff;
+  color: white;
+}
+
+.dashboard__btn.add:hover {
+  background: #005fa3;
+}
+
+.dashboard__btn.edit {
+  background: #ff6f61;
+  color: white;
+}
+
+.dashboard__btn.edit:hover {
+  background: #cc554c;
+}
+
+/* Intro */
 .dashboard__intro {
-  font-size: 1.1rem;
+  margin-bottom: 16px;
+  font-size: 15px;
   color: #555;
-  margin-bottom: 2rem;
+  text-align: center;
 }
 
-.dashboard__cards {
+/* Cookbook grid */
+.dashboard__cookbook {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
 }
 
-.dashboard__card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  padding: 1rem;
-  transition: transform 0.2s ease-in-out;
+.dashboard__cookbook-item {
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  transition: background 0.2s ease;
 }
 
-.dashboard__card:hover {
-  transform: translateY(-4px);
+.dashboard__cookbook-item:hover {
+  background: #f0f0f0;
 }
 
-.dashboard__card-title {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
+.dashboard__cookbook-image {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 8px;
 }
 
-.dashboard__card-content {
-  font-size: 0.95rem;
-  color: #666;
+.dashboard__cookbook-title {
+  font-size: 14px;
+  font-weight: 600;
 }
 
-/* Tablet: 768px - 1024px */
+.dashboard__empty {
+  text-align: center;
+  font-size: 15px;
+  color: #888;
+  margin-top: 20px;
+}
+
+/* 📱 Responsive */
+
+/* Tablet */
 @media (max-width: 1024px) {
   .dashboard {
-    padding: 1.5rem;
+    grid-template-columns: 200px 1fr;
+  }
+
+  .dashboard__sidebar {
+    padding: 16px;
   }
 
   .dashboard__title {
-    font-size: 1.75rem;
+    font-size: 20px;
   }
 
-  .dashboard__intro {
-    font-size: 1rem;
-  }
-
-  .dashboard__cards {
-    gap: 1.2rem;
-  }
-
-  .dashboard__card-title {
-    font-size: 1.1rem;
-  }
-
-  .dashboard__card-content {
-    font-size: 0.9rem;
+  .dashboard__btn {
+    font-size: 13px;
+    padding: 8px 12px;
   }
 }
 
-/* iPad Portrait: ~768px */
+/* Mobile */
 @media (max-width: 768px) {
   .dashboard {
-    padding: 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard__sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+    position: relative; /* disable sticky */
+    top: auto;
+  }
+
+  .dashboard__main {
+    padding: 16px;
+  }
+
+  .dashboard__actions {
+    flex-direction: column;
+    gap: 10px;
   }
 
   .dashboard__title {
-    font-size: 1.5rem;
-  }
-
-  .dashboard__intro {
-    font-size: 0.95rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .dashboard__cards {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1rem;
-  }
-
-  .dashboard__card-title {
-    font-size: 1rem;
-  }
-
-  .dashboard__card-content {
-    font-size: 0.85rem;
+    font-size: 18px;
   }
 }
 
-/* Mobile: 480px and below */
+/* Small Mobile */
 @media (max-width: 480px) {
-  .dashboard {
-    padding: 0.75rem;
-  }
-
   .dashboard__title {
-    font-size: 1.25rem;
+    font-size: 16px;
   }
 
-  .dashboard__intro {
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
+  .dashboard__btn {
+    font-size: 12px;
+    padding: 6px 10px;
   }
 
-  .dashboard__cards {
+  .dashboard__cookbook {
     grid-template-columns: 1fr;
-    gap: 0.8rem;
-  }
-
-  .dashboard__card-title {
-    font-size: 0.95rem;
-  }
-
-  .dashboard__card-content {
-    font-size: 0.8rem;
   }
 }
