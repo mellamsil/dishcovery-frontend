@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useEffect } from "react";
 import "../styles/modal.css";
 
 const ModalWithForm = forwardRef(
@@ -15,19 +15,26 @@ const ModalWithForm = forwardRef(
       closeIcon,
       submitClassName,
       isDirty = false,
-      hideSubmit = false, // NEW PROP
+      hideSubmit = false,
     },
     ref
   ) => {
+    // ESC key to close modal
+    useEffect(() => {
+      const handleEsc = (e) => {
+        if (e.key === "Escape") onClose();
+      };
+      window.addEventListener("keydown", handleEsc);
+      return () => window.removeEventListener("keydown", handleEsc);
+    }, [onClose]);
+
     return (
       <div
         className="modal-overlay"
         role="dialog"
         aria-modal="true"
         onClick={(e) => {
-          if (e.target.classList.contains("modal-overlay")) {
-            onClose();
-          }
+          if (e.target.classList.contains("modal-overlay")) onClose();
         }}
       >
         <div className="modal" ref={ref} onClick={(e) => e.stopPropagation()}>
@@ -50,12 +57,8 @@ const ModalWithForm = forwardRef(
           <form className="modal-form" onSubmit={onSubmit}>
             {children}
 
-            {/* Buttons side by side */}
-            {!hideSubmit && ( // Only render if hideSubmit is false
-              <div
-                className="modal-actions"
-                style={{ display: "flex", gap: "10px" }}
-              >
+            {!hideSubmit && (
+              <div className="modal-actions">
                 <button
                   type="submit"
                   className={`btn-primary ${

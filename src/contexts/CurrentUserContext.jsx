@@ -1,14 +1,15 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 
-export const CurrentUserContext = createContext();
+// Create context
+export const CurrentUserContext = createContext(null);
 
+// Provider component
 export const CurrentUserProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [token, setToken] = useState(null);
-  const [usersDB, setUsersDB] = useState([]);
-  const [loading, setLoading] = useState(true); // NEW
+  const [loading, setLoading] = useState(true);
 
-  // --- Restore session from localStorage ---
+  // Restore user session from localStorage on app load
   useEffect(() => {
     const storedUser = localStorage.getItem("currentUser");
     const storedToken = localStorage.getItem("token");
@@ -17,49 +18,29 @@ export const CurrentUserProvider = ({ children }) => {
       setCurrentUser(JSON.parse(storedUser));
       setToken(storedToken);
     }
-
-    setLoading(false); // finished checking
+    setLoading(false);
   }, []);
 
-  // --- Signup ---
   const signup = (formData) =>
-    new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const existingUser = usersDB.find((u) => u.email === formData.email);
-        if (existingUser) return reject(new Error("Email already registered"));
-
-        const newUser = { ...formData, id: Date.now().toString() };
-        setUsersDB((prev) => [...prev, newUser]);
-        setCurrentUser(newUser);
-        setToken("mock-token");
-
-        // persist
-        localStorage.setItem("currentUser", JSON.stringify(newUser));
-        localStorage.setItem("token", "mock-token");
-
-        resolve(newUser);
-      }, 600);
+    new Promise((resolve) => {
+      const newUser = { ...formData, id: Date.now().toString() };
+      setCurrentUser(newUser);
+      setToken("mock-token");
+      localStorage.setItem("currentUser", JSON.stringify(newUser));
+      localStorage.setItem("token", "mock-token");
+      resolve(newUser);
     });
 
-  // --- Signin ---
-  const signin = ({ email, password }) =>
-    new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const foundUser = usersDB.find((u) => u.email === email);
-        if (!foundUser) return reject(new Error("User not found"));
-
-        setCurrentUser(foundUser);
-        setToken("mock-token");
-
-        // persist
-        localStorage.setItem("currentUser", JSON.stringify(foundUser));
-        localStorage.setItem("token", "mock-token");
-
-        resolve(foundUser);
-      }, 600);
+  const signin = ({ email }) =>
+    new Promise((resolve) => {
+      const mockUser = { id: Date.now(), name: "Demo User", email };
+      setCurrentUser(mockUser);
+      setToken("mock-token");
+      localStorage.setItem("currentUser", JSON.stringify(mockUser));
+      localStorage.setItem("token", "mock-token");
+      resolve(mockUser);
     });
 
-  // --- Signout ---
   const signout = () => {
     setCurrentUser(null);
     setToken(null);
@@ -67,38 +48,11 @@ export const CurrentUserProvider = ({ children }) => {
     localStorage.removeItem("token");
   };
 
-  // --- Update user ---
-  const updateUser = (updatedData) =>
-    new Promise((resolve) => {
-      setCurrentUser((prev) => {
-        const updatedUser = { ...prev, ...updatedData };
-        setUsersDB((prevDB) =>
-          prevDB.map((u) => (u.id === updatedUser.id ? updatedUser : u))
-        );
-
-        // persist
-        localStorage.setItem("currentUser", JSON.stringify(updatedUser));
-
-        return updatedUser;
-      });
-      resolve(updatedData);
-    });
-
   return (
     <CurrentUserContext.Provider
-      value={{
-        currentUser,
-        token,
-        signup,
-        signin,
-        signout,
-        updateUser,
-        loading,
-      }}
+      value={{ currentUser, token, signup, signin, signout, loading }}
     >
       {children}
     </CurrentUserContext.Provider>
   );
 };
-
-export const useAuth = () => useContext(CurrentUserContext);

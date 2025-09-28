@@ -10,7 +10,6 @@
   background: #fafafa;
 }
 
-/* ===== Hero Section (2x2 Grid) ===== */
 .hero {
   display: grid;
   grid-template-columns: 1fr 2fr;
@@ -22,7 +21,6 @@
   overflow-x: hidden;
 }
 
-/* ===== Left Column ===== */
 .hero__left {
   display: grid;
   grid-template-rows: auto 1fr;
@@ -52,7 +50,6 @@
   margin: 0;
 }
 
-/* ===== Hero Search Form ===== */
 .hero__search {
   display: flex;
   gap: 12px;
@@ -104,7 +101,6 @@
   margin-bottom: 8px;
 }
 
-/* ===== Right Column ===== */
 .hero__right {
   display: grid;
   grid-template-rows: auto 1fr;
@@ -120,7 +116,6 @@
   text-align: center;
 }
 
-/* Right Column Mockup Wrapper */
 .hero__right-content {
   display: flex;
   justify-content: center;
@@ -145,20 +140,26 @@
   overflow-y: auto;
   background: #fff;
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-  padding: 12px;
   box-sizing: border-box;
+  height: 67%;
+  width: 90%;
+  top: 4%;
+  left: 5%;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
 }
 
 .imac-recipe-list {
-  display: flex;
   flex-direction: column;
-  gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #ccc transparent;
+  height: 100%;
 }
 
 .imac-recipe-list::-webkit-scrollbar {
@@ -180,6 +181,8 @@
   padding: 8px;
   cursor: pointer;
   transition: background 0.2s ease;
+  height: 33%;
+  box-sizing: border-box;
 }
 
 .imac-recipe-item:hover {
@@ -187,17 +190,10 @@
 }
 
 .imac-recipe-image {
-  width: 100px;
-  height: 70px;
+  width: 100%;
+  aspect-ratio: 1.4;
   object-fit: cover;
   border-radius: 6px;
-}
-
-.imac-recipe-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow: hidden;
 }
 
 .imac-recipe-title {
@@ -279,8 +275,7 @@
   font-weight: 500;
 }
 
-/* ===== Responsive ===== */
-@media (max-width: 1024px) {
+@media (max-width: 1165px) {
   .home__recipe-list {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -342,5 +337,9 @@
   }
   .imac-recipe-item {
     grid-template-columns: 90px 1fr;
+  }
+
+  .imac-recipe-list {
+    height: 90%;
   }
 }

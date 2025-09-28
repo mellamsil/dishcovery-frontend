@@ -20,7 +20,7 @@ function request(endpoint, options = {}) {
     });
 }
 
-// --- Auth Endpoints ---
+// Auth Endpoints
 export const signup = (email, password) => {
   return request("/auth/signup", {
     method: "POST",
@@ -35,9 +35,9 @@ export const signin = (email, password) => {
   });
 };
 
-// --- User Endpoints ---
+// User Ednpoints
 export const getCurrentUser = (token) => {
-  if (!token) return Promise.resolve(null); // safely handle missing token
+  if (!token) return Promise.resolve(null);
 
   return request("/users/me", {
     headers: { Authorization: `Bearer ${token}` },

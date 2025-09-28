@@ -1,17 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ModalWithForm from "./ModalWithForm";
 
 function DeleteConfirm({ item, onDelete, onCancel }) {
   const [deleting, setDeleting] = useState(false);
-
-  if (!item) return null;
 
   // --- Mock deleteRecipe function ---
   const deleteRecipe = (id) => {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve({ success: true, deletedId: id });
-      }, 600); // simulate network delay
+      }, 600);
     });
   };
 
@@ -22,23 +20,42 @@ function DeleteConfirm({ item, onDelete, onCancel }) {
     deleteRecipe(item._id).then((res) => {
       setDeleting(false);
       if (res.success) {
-        onDelete(res.deletedId); // pass deleted ID back to Profile
+        onDelete(res.deletedId);
       }
     });
   };
 
+  // useEffect is safe now
+  useEffect(() => {
+    const handleEsc = (e) => {
+      if (e.key === "Escape") {
+        onCancel();
+      }
+    };
+    document.addEventListener("keydown", handleEsc);
+    return () => document.removeEventListener("keydown", handleEsc);
+  }, [onCancel]);
+
+  // Early return inside render
+  if (!item) return null;
+
   return (
     <ModalWithForm
-      title="Delete Item"
+      title="Delete Recipe"
       onClose={onCancel}
       onSubmit={handleSubmit}
       submitText={deleting ? "Deleting..." : "Yes, Delete"}
       secondaryText="Cancel"
-      disabled={deleting}
+      secondaryAction={onCancel}
+      closeIcon="/src/assets/icons/close.svg"
+      isLoading={deleting}
     >
-      <p>
-        Are you sure you want to delete this item <strong>{item.title}</strong>{" "}
-        from your cookbook?
+      <p style={{ marginBottom: "10px" }}>
+        <span style={{ color: "#e74c3c", fontWeight: "bold" }}>Warning: </span>
+        <span style={{ color: "#000" }}>
+          Are you sure you want to delete <strong>{item.title}</strong> from
+          your cookbook? This action cannot be undone.
+        </span>
       </p>
     </ModalWithForm>
   );

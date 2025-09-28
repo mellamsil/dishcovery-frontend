@@ -1,38 +1,12 @@
-.hero-imac {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: transparent;
-  padding: 0;
-}
-
 .hero-imac__mockup {
   position: relative;
   width: 700px;
-  height: 500px;
+  /* height: 500px; */
+  aspect-ratio: 1.3;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
   box-sizing: border-box;
-}
-
-/* iMac screen area */
-.hero-imac__screen {
-  position: absolute;
-  top: 24px;
-  left: 50px;
-  width: 600px;
-  height: 350px;
-  border-radius: 6px;
-  overflow-y: auto;
-  background: #fff;
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  box-sizing: border-box;
-  scrollbar-width: thin;
-  scrollbar-color: #ccc transparent;
 }
 
 .hero-imac__screen::-webkit-scrollbar {
@@ -51,43 +25,11 @@
   margin-top: 120px;
 }
 
-/* Recipe list inside iMac */
-.imac-recipe-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.imac-recipe-item {
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  gap: 12px;
-  align-items: center;
-  background: #f9f9f9;
-  border-radius: 6px;
-  cursor: pointer;
-  padding: 10px;
-  transition: background 0.2s ease;
-}
-
 .imac-recipe-item:hover {
   background: #f0f0f0;
 }
 
-.imac-recipe-image {
-  width: 120px;
-  height: 90px;
-  object-fit: cover;
-  border-radius: 6px;
-}
-
 .imac-recipe-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   overflow: hidden;
 }
 
@@ -112,26 +54,17 @@
   overflow: hidden;
 }
 
-/* Tablet (768px - 1024px) */
-@media (max-width: 1024px) {
+@media (max-width: 1165px) {
   .hero-imac__mockup {
     width: 550px;
-    height: 400px;
   }
-  .hero-imac__screen {
-    top: 20px;
-    left: 40px;
-    width: 470px;
-    height: 300px;
-    padding: 8px;
-  }
+
   .imac-recipe-item {
     grid-template-columns: 100px 1fr;
     gap: 10px;
   }
   .imac-recipe-image {
     width: 100px;
-    height: 75px;
   }
   .imac-recipe-title {
     font-size: 14px;
@@ -141,18 +74,11 @@
   }
 }
 
-/* iPad portrait (~768px) */
 @media (max-width: 768px) {
   .hero-imac__mockup {
     width: 450px;
-    height: 350px;
   }
-  .hero-imac__screen {
-    top: 16px;
-    left: 30px;
-    width: 390px;
-    height: 270px;
-  }
+
   .imac-recipe-item {
     grid-template-columns: 90px 1fr;
   }
@@ -168,22 +94,14 @@
   }
 }
 
-/* Mobile (≤480px) */
 @media (max-width: 480px) {
   .hero-imac {
     padding: 10px;
   }
   .hero-imac__mockup {
     width: 300px;
-    height: 220px;
   }
-  .hero-imac__screen {
-    top: 12px;
-    left: 20px;
-    width: 260px;
-    height: 180px;
-    padding: 6px;
-  }
+
   .imac-recipe-item {
     grid-template-columns: 70px 1fr;
     gap: 6px;

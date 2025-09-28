@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -14,6 +14,24 @@ import SearchResults from "./pages/SearchResults";
 import "./App.css";
 
 function App() {
+  const [currentUser] = useState(null);
+
+  const [userRecipes, setUserRecipes] = useState([]);
+
+  // --- Handlers ---
+  const handleAddItem = (newItem) => {
+    setUserRecipes((prev) => [
+      ...prev,
+      { ...newItem, _id: Date.now().toString() },
+    ]);
+  };
+
+  const handleEditItem = (updatedItem) => {
+    setUserRecipes((prev) =>
+      prev.map((r) => (r._id === updatedItem._id ? updatedItem : r))
+    );
+  };
+
   return (
     <>
       <Header />
@@ -31,7 +49,7 @@ function App() {
             path="/profile"
             element={
               <PrivateRoute>
-                <Profile />
+                <Profile currentUser={currentUser} />
               </PrivateRoute>
             }
           />
@@ -39,7 +57,7 @@ function App() {
             path="/favorites"
             element={
               <PrivateRoute>
-                <Favorites />
+                <Favorites userRecipes={userRecipes} />
               </PrivateRoute>
             }
           />
@@ -47,7 +65,12 @@ function App() {
             path="/dashboard"
             element={
               <PrivateRoute>
-                <Dashboard />
+                <Dashboard
+                  currentUser={currentUser}
+                  userRecipes={userRecipes}
+                  onAddItem={handleAddItem}
+                  onEditItem={handleEditItem}
+                />
               </PrivateRoute>
             }
           />

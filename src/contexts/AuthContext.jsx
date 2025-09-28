@@ -1,13 +1,18 @@
-import React, { createContext, useState } from "react";
+import React, { useState } from "react";
+import { CurrentUserContext } from "./CurrentUserContext";
 
-export const CurrentUserContext = createContext();
+// Only export contexts and components here
+// export const AuthContext = createContext(null);
+// export const CurrentUserContext = createContext(null);
 
 export const CurrentUserProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
+  // Remove token since it's unused
+  // const [token, setToken] = useState(null);
 
   // --- MOCK SIGNUP ---
-  const signup = (formData) => {
-    return new Promise((resolve, reject) => {
+  const signup = (formData) =>
+    new Promise((resolve, reject) => {
       setTimeout(() => {
         if (formData.email === "fail@test.com") {
           reject(new Error("Mock signup failed"));
@@ -22,13 +27,11 @@ export const CurrentUserProvider = ({ children }) => {
         }
       }, 500);
     });
-  };
 
   // --- MOCK SIGNIN ---
-  const signin = (formData) => {
-    return new Promise((resolve, reject) => {
+  const signin = (formData) =>
+    new Promise((resolve, reject) => {
       setTimeout(() => {
-        // accept any credentials except a specific "bad" one
         if (formData.email === "bad@test.com") {
           reject(new Error("Mock signin failed"));
         } else {
@@ -42,17 +45,15 @@ export const CurrentUserProvider = ({ children }) => {
         }
       }, 500);
     });
-  };
 
   // --- MOCK SIGNOUT ---
-  const signout = () => {
-    return new Promise((resolve) => {
+  const signout = () =>
+    new Promise((resolve) => {
       setTimeout(() => {
         setCurrentUser(null);
         resolve();
       }, 200);
     });
-  };
 
   return (
     <CurrentUserContext.Provider

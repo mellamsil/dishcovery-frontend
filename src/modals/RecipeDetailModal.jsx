@@ -1,23 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "../styles/modal.css";
 
 function RecipeDetailModal({ recipe, isSaving, onClose, onSave }) {
   const [closing, setClosing] = useState(false);
 
-  if (!recipe) return null;
+  // --- Handle close ---
+  const handleClose = useCallback(() => {
+    setClosing(true);
+    setTimeout(() => onClose(), 250); // match animation duration
+  }, [onClose]);
 
+  // --- Handle Escape key ---
   useEffect(() => {
     const handleEsc = (event) => {
       if (event.key === "Escape") handleClose();
     };
     window.addEventListener("keydown", handleEsc);
     return () => window.removeEventListener("keydown", handleEsc);
-  }, []);
+  }, [handleClose]);
 
-  const handleClose = () => {
-    setClosing(true);
-    setTimeout(() => onClose(), 250); // match animation duration
-  };
+  if (!recipe) return null;
 
   return (
     <div

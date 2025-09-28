@@ -3,23 +3,21 @@ import { useNavigate, useLocation } from "react-router-dom";
 import LoginModal from "../modals/LoginModal";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
-const Signin = () => {
+const Signin = ({ onSwitchToRegister }) => {
   const { signin } = useContext(CurrentUserContext);
   const [showModal, setShowModal] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // If redirected from PrivateRoute, get the original target
   const from = location.state?.from?.pathname || "/dashboard";
 
-  // Login handler
   const handleSignIn = (credentials) => {
     setError(null);
     return signin(credentials)
       .then(() => {
         setShowModal(false);
-        navigate(from, { replace: true }); // Redirect after login
+        navigate(from, { replace: true });
       })
       .catch(() => setError("Signin failed (Stage 1 demo)"));
   };
@@ -30,6 +28,7 @@ const Signin = () => {
         <LoginModal
           onClose={() => setShowModal(false)}
           onSignIn={handleSignIn}
+          onSwitchToRegister={onSwitchToRegister} // pass it down
         />
       )}
       {error && <p className="text-red-500">{error}</p>}
