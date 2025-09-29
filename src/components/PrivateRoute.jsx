@@ -11,7 +11,8 @@ const PrivateRoute = ({ children }) => {
   }
 
   if (!currentUser) {
-    return <Navigate to="/signin" state={{ from: location }} replace />;
+    // Redirect to homepage instead of /signin
+    return <Navigate to="/" state={{ from: location }} replace />;
   }
 
   return children;

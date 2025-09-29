@@ -1,77 +1,41 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
-import ModalWithForm from "../modals/ModalWithForm";
 import "../styles/Profile.css";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import EditProfileModal from "../modals/EditProfileModal";
+import DeleteConfirm from "../modals/DeleteConfirm";
 
 const Profile = ({ userRecipes = [] }) => {
-  const { currentUser } = useContext(CurrentUserContext);
+  const { currentUser, updateProfile } = useContext(CurrentUserContext);
 
-  const [avatar, setAvatar] = useState(
-    currentUser?.avatar || "/src/assets/images/placeholder.png"
-  );
-  const [name, setName] = useState(currentUser?.name || "Anonymous User");
-  const [email, setEmail] = useState(
-    currentUser?.email || "noemail@example.com"
-  );
-  const [bio, setBio] = useState(currentUser?.bio || "");
-  const [preferences, setPreferences] = useState({
-    favoriteCuisine: currentUser?.preferences?.favoriteCuisine || "Italian",
-    dietary: currentUser?.preferences?.dietary || "Vegan",
-    notifications: currentUser?.preferences?.notifications ?? true,
-  });
-
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showEmailModal, setShowEmailModal] = useState(false);
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [editingPreferences, setEditingPreferences] = useState(false);
-
-  const [newEmail, setNewEmail] = useState("");
-  const [confirmEmail, setConfirmEmail] = useState("");
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const totalSubmitted = userRecipes.length;
   const totalFavorites = userRecipes.filter((r) => r.isFavorite).length;
   const recentRecipes = userRecipes.slice(0, 3);
 
-  const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-    if (file) setAvatar(URL.createObjectURL(file));
-  };
-
-  const handleSaveProfile = (updatedInfo) => {
-    setName(updatedInfo.name);
-    setEmail(updatedInfo.email);
-    setBio(updatedInfo.bio);
-    setAvatar(updatedInfo.avatar);
-    setPreferences(updatedInfo.preferences);
-    setShowEditModal(false);
-    // TODO: Backend integration
-  };
-
-  // Keep modals closable via Escape key
-  useEffect(() => {
-    const handleEsc = (e) => {
-      if (e.key === "Escape") {
-        setShowEditModal(false);
-        setShowEmailModal(false);
-        setShowPasswordModal(false);
-        setShowDeleteModal(false);
-      }
-    };
-    if (
-      showEditModal ||
-      showEmailModal ||
-      showPasswordModal ||
-      showDeleteModal
-    ) {
-      window.addEventListener("keydown", handleEsc);
+  // Handle profile save via context's updateProfile
+  const handleSaveProfile = async (updatedInfo) => {
+    try {
+      await updateProfile(updatedInfo);
+      setShowEditModal(false);
+    } catch (err) {
+      console.error("Failed to save profile:", err);
+      alert(err.message || "Failed to update profile");
     }
-    return () => window.removeEventListener("keydown", handleEsc);
-  }, [showEditModal, showEmailModal, showPasswordModal, showDeleteModal]);
+  };
+
+  const handleDeleteAccount = () => {
+    console.log("Delete account logic goes here");
+    setShowDeleteModal(false);
+    // TODO: Integrate backend deletion & logout
+  };
+
+  if (!currentUser) return <p>Loading profile...</p>;
+
+  const { name, email, bio, avatar, preferences } = currentUser;
 
   return (
     <div className="profile">
@@ -81,7 +45,7 @@ const Profile = ({ userRecipes = [] }) => {
       <div className="profile__userinfo">
         <div className="profile__avatar-wrapper">
           <img
-            src={avatar}
+            src={avatar || "/src/assets/images/placeholder.png"}
             alt={`${name}'s avatar`}
             className="profile__avatar"
           />
@@ -104,18 +68,6 @@ const Profile = ({ userRecipes = [] }) => {
         <h3>Account Settings</h3>
         <div className="profile__settings-actions">
           <button
-            className="profile__btn"
-            onClick={() => setShowEmailModal(true)}
-          >
-            Update Email
-          </button>
-          <button
-            className="profile__btn"
-            onClick={() => setShowPasswordModal(true)}
-          >
-            Change Password
-          </button>
-          <button
             className="profile__btn danger-btn"
             onClick={() => setShowDeleteModal(true)}
           >
@@ -129,9 +81,9 @@ const Profile = ({ userRecipes = [] }) => {
         <h3>Preferences</h3>
         {!editingPreferences ? (
           <div className="profile__preferences-view">
-            <p>Favorite Cuisine: {preferences.favoriteCuisine}</p>
-            <p>Dietary: {preferences.dietary}</p>
-            <p>Notifications: {preferences.notifications ? "On" : "Off"}</p>
+            <p>Favorite Cuisine: {preferences?.favoriteCuisine || "N/A"}</p>
+            <p>Dietary: {preferences?.dietary || "N/A"}</p>
+            <p>Notifications: {preferences?.notifications ? "On" : "Off"}</p>
             <button
               className="profile__btn edit-profile"
               onClick={() => setEditingPreferences(true)}
@@ -145,12 +97,15 @@ const Profile = ({ userRecipes = [] }) => {
               Favorite Cuisine:
               <input
                 type="text"
-                value={preferences.favoriteCuisine}
+                value={preferences?.favoriteCuisine || ""}
                 onChange={(e) =>
-                  setPreferences((prev) => ({
-                    ...prev,
-                    favoriteCuisine: e.target.value,
-                  }))
+                  handleSaveProfile({
+                    ...currentUser,
+                    preferences: {
+                      ...preferences,
+                      favoriteCuisine: e.target.value,
+                    },
+                  })
                 }
               />
             </label>
@@ -158,24 +113,27 @@ const Profile = ({ userRecipes = [] }) => {
               Dietary:
               <input
                 type="text"
-                value={preferences.dietary}
+                value={preferences?.dietary || ""}
                 onChange={(e) =>
-                  setPreferences((prev) => ({
-                    ...prev,
-                    dietary: e.target.value,
-                  }))
+                  handleSaveProfile({
+                    ...currentUser,
+                    preferences: { ...preferences, dietary: e.target.value },
+                  })
                 }
               />
             </label>
             <label>
               Notifications:
               <select
-                value={preferences.notifications ? "On" : "Off"}
+                value={preferences?.notifications ? "On" : "Off"}
                 onChange={(e) =>
-                  setPreferences((prev) => ({
-                    ...prev,
-                    notifications: e.target.value === "On",
-                  }))
+                  handleSaveProfile({
+                    ...currentUser,
+                    preferences: {
+                      ...preferences,
+                      notifications: e.target.value === "On",
+                    },
+                  })
                 }
               >
                 <option value="On">On</option>
@@ -212,7 +170,6 @@ const Profile = ({ userRecipes = [] }) => {
             Recipes Liked: <span className="stat-count">{totalFavorites}</span>
           </p>
         </div>
-
         <div className="profile__recent">
           <h4>Recent Recipes:</h4>
           {recentRecipes.length > 0 ? (
@@ -262,7 +219,21 @@ const Profile = ({ userRecipes = [] }) => {
       </div>
 
       {/* Modals */}
-      {/* ...Modals remain unchanged, just use current state variables */}
+      {showEditModal && (
+        <EditProfileModal
+          currentUser={currentUser}
+          onClose={() => setShowEditModal(false)}
+          onUpdate={handleSaveProfile}
+        />
+      )}
+
+      {showDeleteModal && (
+        <DeleteConfirm
+          itemName="account"
+          onClose={() => setShowDeleteModal(false)}
+          onDelete={handleDeleteAccount}
+        />
+      )}
     </div>
   );
 };

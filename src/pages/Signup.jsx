@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import RegisterModal from "../modals/RegisterModal";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
-const Signup = () => {
+const Signup = ({ onClose, onSwitchToLogin }) => {
   const { signup } = useContext(CurrentUserContext);
   const [showModal, setShowModal] = useState(true);
   const [error, setError] = useState(null);
@@ -18,17 +18,27 @@ const Signup = () => {
     return signup(formData)
       .then(() => {
         setShowModal(false);
+        if (onClose) onClose();
         navigate(from, { replace: true }); // Redirect after signup
       })
       .catch(() => setError("Signup failed (Stage 1 demo)"));
+  };
+
+  const handleSwitchToLogin = () => {
+    setShowModal(false);
+    if (onSwitchToLogin) onSwitchToLogin();
   };
 
   return (
     <>
       {showModal && (
         <RegisterModal
-          onClose={() => setShowModal(false)}
+          onClose={() => {
+            setShowModal(false);
+            if (onClose) onClose();
+          }}
           onSignUp={handleSignUp}
+          onSwitchToLogin={handleSwitchToLogin}
         />
       )}
       {error && <p className="text-red-500">{error}</p>}

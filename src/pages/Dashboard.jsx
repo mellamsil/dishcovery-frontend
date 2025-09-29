@@ -72,7 +72,7 @@ const Dashboard = ({
       <main className="dashboard__main">
         {/* Dashboard header with user info */}
         <div className="dashboard__header">
-          {currentUser && (
+          {/* {currentUser && (
             <div className="dashboard__user-info">
               <img
                 src={currentUser.avatar || "/default-avatar.png"}
@@ -81,7 +81,7 @@ const Dashboard = ({
               />
               <span className="dashboard__user-name">{currentUser.name}</span>
             </div>
-          )}
+          )} */}
           <h1 className="dashboard__title">{firstName}'s Cookbook</h1>
         </div>
 

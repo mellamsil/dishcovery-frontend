@@ -42,7 +42,7 @@ const LoginModal = ({ onClose, onSignIn, onSwitchToRegister }) => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     setError(null);
 
     const validationError = validateForm();
@@ -132,7 +132,7 @@ const LoginModal = ({ onClose, onSignIn, onSwitchToRegister }) => {
 LoginModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   onSignIn: PropTypes.func.isRequired,
-  onSwitchToRegister: PropTypes.func.isRequired,
+  onSwitchToRegister: PropTypes.func, // made optional, logs warning if missing
 };
 
 export default LoginModal;

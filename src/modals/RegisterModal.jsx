@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import PropTypes from "prop-types";
 import "../styles/modal.css";
 import CloseIcon from "../assets/icons/close.svg";
 import ModalWithForm from "./ModalWithForm";
@@ -19,6 +20,7 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
   const [loading, setLoading] = useState(false);
   const modalRef = useRef(null);
 
+  // Focus first input
   useEffect(() => {
     const focusable = modalRef.current?.querySelectorAll(
       "input, button, textarea, a[href]"
@@ -26,6 +28,7 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
     if (focusable?.length) focusable[0].focus();
   }, []);
 
+  // Close on ESC
   useEffect(() => {
     const handleEsc = (e) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", handleEsc);
@@ -61,7 +64,6 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
 
   const handleRegisterClick = () => {
     setError(null);
-
     const validationError = validateForm();
     if (validationError) return setError(validationError);
 
@@ -71,9 +73,8 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
       .finally(() => setLoading(false));
   };
 
-  // Safe wrapper for the "or Sign In" button
   const handleSwitchToLogin = () => {
-    if (onSwitchToLogin && typeof onSwitchToLogin === "function") {
+    if (typeof onSwitchToLogin === "function") {
       onSwitchToLogin();
     } else {
       console.warn("onSwitchToLogin function is not defined in parent");
@@ -86,7 +87,7 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
       onClose={onClose}
       ref={modalRef}
       closeIcon={CloseIcon}
-      hideSubmit={true} // hide the default submit button
+      hideSubmit={true}
     >
       {error && <p className="modal-error">{error}</p>}
 
@@ -176,7 +177,6 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
         </label>
       </div>
 
-      {/* Register + Sign In buttons */}
       <div className="modal__actions modal__actions--inline">
         <button
           type="button"
@@ -196,6 +196,12 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
       </div>
     </ModalWithForm>
   );
+};
+
+RegisterModal.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  onSignUp: PropTypes.func.isRequired,
+  onSwitchToLogin: PropTypes.func.isRequired,
 };
 
 export default RegisterModal;
