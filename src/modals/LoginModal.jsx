@@ -10,7 +10,6 @@ const LoginModal = ({ onClose, onSignIn, onSwitchToRegister }) => {
   const [loading, setLoading] = useState(false);
   const modalRef = useRef(null);
 
-  // Focus first input on mount
   useEffect(() => {
     const focusable = modalRef.current?.querySelectorAll(
       "input, button, textarea, a[href]"

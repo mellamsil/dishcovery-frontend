@@ -3,11 +3,13 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import "../styles/Header.css";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
-function Header({ openRegisterModal, openLoginModal }) {
-  const { currentUser, signout } = useContext(CurrentUserContext);
-  const [isOpen, setIsOpen] = useState(false); // hamburger menu for unauthenticated users
+const DEFAULT_AVATAR = "/src/assets/images/placeholder.png";
+
+function Header({ isLoggedIn, onSignOut, openRegisterModal, openLoginModal }) {
+  const [isOpen, setIsOpen] = useState(false); // hamburger menu for mobile
   const location = useLocation();
   const navigate = useNavigate();
+  const { currentUser } = useContext(CurrentUserContext);
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
@@ -15,8 +17,14 @@ function Header({ openRegisterModal, openLoginModal }) {
   const isActive = (path) => location.pathname === path;
 
   const handleSignOut = () => {
-    signout();
+    onSignOut();
     navigate("/");
+  };
+
+  const getAvatar = () => {
+    return currentUser?.avatar?.trim() !== ""
+      ? currentUser.avatar
+      : DEFAULT_AVATAR;
   };
 
   return (
@@ -30,7 +38,7 @@ function Header({ openRegisterModal, openLoginModal }) {
         </h1>
 
         {/* Hamburger Button (mobile only, unauthenticated users) */}
-        {!currentUser && (
+        {!isLoggedIn && (
           <button
             className="hamburger"
             onClick={toggleMenu}
@@ -41,7 +49,7 @@ function Header({ openRegisterModal, openLoginModal }) {
         )}
 
         {/* Navigation */}
-        {!currentUser ? (
+        {!isLoggedIn ? (
           <nav className={`nav ${isOpen ? "open" : ""}`}>
             <Link
               to="/"
@@ -51,21 +59,19 @@ function Header({ openRegisterModal, openLoginModal }) {
               Home
             </Link>
             <button
-              type="button"
-              className={`nav-link ${isActive("/signup") ? "active" : ""}`}
+              className="nav-link"
               onClick={() => {
-                closeMenu();
                 openRegisterModal();
+                closeMenu();
               }}
             >
               Sign Up
             </button>
             <button
-              type="button"
-              className={`nav-link ${isActive("/signin") ? "active" : ""}`}
+              className="nav-link"
               onClick={() => {
-                closeMenu();
                 openLoginModal();
+                closeMenu();
               }}
             >
               Sign In
@@ -76,17 +82,21 @@ function Header({ openRegisterModal, openLoginModal }) {
             {/* Top row: avatar + name */}
             <div className="header__user-top">
               <img
-                src={currentUser.avatar || "/src/assets/images/placeholder.png"}
-                alt={`${currentUser.name}'s avatar`}
+                src={getAvatar()}
+                alt={`${currentUser?.name || "User"}'s avatar`}
                 className="avatar"
               />
-              <span className="user-name">{currentUser.name}</span>
+              <span className="user-name">{currentUser?.name || "User"}</span>
             </div>
 
             {/* Bottom row: Profile, Dashboard, Sign Out */}
             <div className="header__user-links">
-              <Link to="/profile">Profile</Link>
-              <Link to="/dashboard">Dashboard</Link>
+              <Link to="/profile" onClick={closeMenu}>
+                Profile
+              </Link>
+              <Link to="/dashboard" onClick={closeMenu}>
+                Dashboard
+              </Link>
               <button onClick={handleSignOut}>Sign Out</button>
             </div>
           </div>
@@ -97,97 +107,3 @@ function Header({ openRegisterModal, openLoginModal }) {
 }
 
 export default Header;
-
-// import React, { useState, useContext } from "react";
-// import { Link, useLocation, useNavigate } from "react-router-dom";
-// import "../styles/Header.css";
-// import { CurrentUserContext } from "../contexts/CurrentUserContext";
-
-// function Header() {
-//   const { currentUser, signout } = useContext(CurrentUserContext);
-//   const [isOpen, setIsOpen] = useState(false); // hamburger menu for unauthenticated users
-//   const location = useLocation();
-//   const navigate = useNavigate();
-
-//   const toggleMenu = () => setIsOpen(!isOpen);
-//   const closeMenu = () => setIsOpen(false);
-
-//   const isActive = (path) => location.pathname === path;
-
-//   const handleSignOut = () => {
-//     signout();
-//     navigate("/");
-//   };
-
-//   return (
-//     <header className="header">
-//       <div className="header-container">
-//         {/* Logo / Title */}
-//         <h1 className="header__title">
-//           <Link to="/" onClick={closeMenu}>
-//             Dishcovery
-//           </Link>
-//         </h1>
-
-//         {/* Hamburger Button (mobile only, unauthenticated users) */}
-//         {!currentUser && (
-//           <button
-//             className="hamburger"
-//             onClick={toggleMenu}
-//             aria-label="Toggle navigation"
-//           >
-//             ☰
-//           </button>
-//         )}
-
-//         {/* Navigation */}
-//         {!currentUser ? (
-//           <nav className={`nav ${isOpen ? "open" : ""}`}>
-//             <Link
-//               to="/"
-//               className={`nav-link ${isActive("/") ? "active" : ""}`}
-//               onClick={closeMenu}
-//             >
-//               Home
-//             </Link>
-//             <Link
-//               to="/signup"
-//               className={`nav-link ${isActive("/signup") ? "active" : ""}`}
-//               onClick={closeMenu}
-//             >
-//               Sign Up
-//             </Link>
-//             <Link
-//               to="/signin"
-//               className={`nav-link ${isActive("/signin") ? "active" : ""}`}
-//               onClick={closeMenu}
-//             >
-//               Sign In
-//             </Link>
-//           </nav>
-//         ) : (
-//           <div className="header__user-container">
-//             {/* Top row: avatar + name */}
-//             <div className="header__user-top">
-//               <img
-//                 src={currentUser.avatar || "/src/assets/images/placeholder.png"}
-//                 alt={`${currentUser.name}'s avatar`}
-//                 className="avatar"
-//               />
-//               <span className="user-name">{currentUser.name}</span>
-//             </div>
-
-//             {/* Bottom row: Profile, Dashboard, Sign Out */}
-//             <div className="header__user-links">
-//               <Link to="/profile">Profile</Link>
-//               <Link to="/dashboard">Dashboard</Link>
-//               <button onClick={handleSignOut}>Sign Out</button>
-//             </div>
-//           </div>
-//         )}
-//       </div>
-//     </header>
-//   );
-// }
-
-// export default Header;

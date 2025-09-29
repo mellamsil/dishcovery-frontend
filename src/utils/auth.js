@@ -6,7 +6,7 @@ export const authorize = (email, password) => {
       } else {
         reject("Invalid credentials");
       }
-    }, 500); // simulate network delay
+    }, 500);
   });
 };
 

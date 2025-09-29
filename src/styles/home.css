@@ -376,11 +376,13 @@
   .imac-recipe-item {
     grid-template-columns: 70px 1fr;
     padding: 6px;
+    min-width: 0;
   }
 
   .imac-recipe-image {
     width: 70px;
     height: 55px;
+    object-fit: cover;
   }
 
   .hero__headline {
@@ -390,5 +392,21 @@
   .hero__sub,
   .hero__features {
     font-size: 12px;
+  }
+
+  .hero-imac__screen {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .imac-recipe-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-x: hidden;
   }
 }

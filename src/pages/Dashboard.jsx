@@ -37,7 +37,6 @@ const Dashboard = ({
     setSelectedRecipe(null);
   };
 
-  // Toggle favorite
   const handleToggleFavorite = (recipeId) => {
     setFavorites((prev) =>
       prev.includes(recipeId)
@@ -46,7 +45,6 @@ const Dashboard = ({
     );
   };
 
-  // Filter recipes
   const filteredRecipes = userRecipes
     .filter((recipe) =>
       recipe.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -70,18 +68,7 @@ const Dashboard = ({
       />
 
       <main className="dashboard__main">
-        {/* Dashboard header with user info */}
         <div className="dashboard__header">
-          {/* {currentUser && (
-            <div className="dashboard__user-info">
-              <img
-                src={currentUser.avatar || "/default-avatar.png"}
-                alt={currentUser.name || "User Avatar"}
-                className="dashboard__user-avatar"
-              />
-              <span className="dashboard__user-name">{currentUser.name}</span>
-            </div>
-          )} */}
           <h1 className="dashboard__title">{firstName}'s Cookbook</h1>
         </div>
 
@@ -105,7 +92,6 @@ const Dashboard = ({
           </button>
         </div>
 
-        {/* Dashboard Intro */}
         {showIntro && (
           <div className="dashboard__intro">
             <p>
@@ -185,6 +171,7 @@ const Dashboard = ({
       {showAdd && (
         <AddItem onClose={() => setShowAdd(false)} onAdd={onAddItem} />
       )}
+
       {showEdit && selectedRecipe && (
         <EditRecipeConfirm
           item={selectedRecipe}
@@ -196,11 +183,14 @@ const Dashboard = ({
           }}
         />
       )}
+
       {showDelete && selectedRecipe && (
         <DeleteConfirm
           item={selectedRecipe}
+          itemName={selectedRecipe.title}
           onDelete={handleConfirmDelete}
-          onCancel={() => setShowDelete(false)}
+          onClose={() => setShowDelete(false)}
+          closeIcon="/src/assets/icons/close.svg"
         />
       )}
     </div>

@@ -71,7 +71,6 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
       .finally(() => setLoading(false));
   };
 
-  // Safe wrapper for the "or Sign In" button
   const handleSwitchToLogin = () => {
     if (onSwitchToLogin && typeof onSwitchToLogin === "function") {
       onSwitchToLogin();
@@ -86,7 +85,7 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
       onClose={onClose}
       ref={modalRef}
       closeIcon={CloseIcon}
-      hideSubmit={true} // hide the default submit button
+      hideSubmit={true}
     >
       {error && <p className="modal-error">{error}</p>}
 

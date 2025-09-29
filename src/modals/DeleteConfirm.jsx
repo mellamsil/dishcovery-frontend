@@ -1,60 +1,56 @@
 import React, { useState, useEffect } from "react";
 import ModalWithForm from "./ModalWithForm";
 
-function DeleteConfirm({ item, onDelete, onCancel }) {
+function DeleteConfirm({ item, itemName, onDelete, onClose, onSignOut }) {
   const [deleting, setDeleting] = useState(false);
 
-  // --- Mock deleteRecipe function ---
-  const deleteRecipe = (id) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({ success: true, deletedId: id });
-      }, 600);
-    });
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setDeleting(true);
 
-    deleteRecipe(item._id).then((res) => {
-      setDeleting(false);
-      if (res.success) {
-        onDelete(res.deletedId);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 600));
+
+      if (item) {
+        onDelete(item._id);
+      } else {
+        onDelete();
+        if (onSignOut) onSignOut();
       }
-    });
+      onClose();
+    } finally {
+      setDeleting(false);
+    }
   };
 
-  // useEffect is safe now
+  // ESC key to close modal
   useEffect(() => {
     const handleEsc = (e) => {
       if (e.key === "Escape") {
-        onCancel();
+        onClose();
       }
     };
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
-  }, [onCancel]);
-
-  // Early return inside render
-  if (!item) return null;
+  }, [onClose]);
 
   return (
     <ModalWithForm
-      title="Delete Recipe"
-      onClose={onCancel}
+      title={`Delete ${itemName || "Item"}`}
+      onClose={onClose}
       onSubmit={handleSubmit}
       submitText={deleting ? "Deleting..." : "Yes, Delete"}
       secondaryText="Cancel"
-      secondaryAction={onCancel}
+      secondaryAction={onClose}
       closeIcon="/src/assets/icons/close.svg"
       isLoading={deleting}
     >
       <p style={{ marginBottom: "10px" }}>
         <span style={{ color: "#e74c3c", fontWeight: "bold" }}>Warning: </span>
         <span style={{ color: "#000" }}>
-          Are you sure you want to delete <strong>{item.title}</strong> from
-          your cookbook? This action cannot be undone.
+          Are you sure you want to delete{" "}
+          <strong>{item ? item.title : itemName}</strong>? This action cannot be
+          undone.
         </span>
       </p>
     </ModalWithForm>

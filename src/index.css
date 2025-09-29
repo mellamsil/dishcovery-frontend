@@ -29,13 +29,21 @@ html {
   color: #111827;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
 }
 
 .container {
   width: 100%;
   max-width: var(--container-width);
   margin: 0 auto;
-  padding: 28px;
+  padding: 16px;
   box-sizing: border-box;
 }
 
@@ -139,24 +147,24 @@ button:focus-visible {
 
 @media (max-width: 360px) {
   .container {
-    padding: 12px;
+    padding: 8px;
   }
 
   #root,
   .app-container,
   .main-content,
   .main-app {
-    padding: 0 8px;
+    padding: 0 4px;
     width: 100%;
     overflow-x: hidden;
   }
 
   h1 {
-    font-size: 1.8em;
+    font-size: 29px;
   }
 
   button {
-    padding: 0.4em 0.8em;
-    font-size: 0.9em;
+    padding: 6px 13px;
+    font-size: 14px;
   }
 }

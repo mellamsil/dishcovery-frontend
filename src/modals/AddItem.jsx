@@ -8,7 +8,7 @@ function AddItem({ item, onClose, onAdd }) {
   const [description, setDescription] = useState("");
   const [instructions, setInstructions] = useState("");
   const [notes, setNotes] = useState("");
-  const [image, setImage] = useState(""); // renamed from imageUrl
+  const [image, setImage] = useState("");
   const [saving, setSaving] = useState(false);
 
   const saveRecipe = (recipe) =>
@@ -26,7 +26,7 @@ function AddItem({ item, onClose, onAdd }) {
       setDescription(item.description || "");
       setInstructions(item.instructions || "");
       setNotes(item.notes || "");
-      setImage(item.image || ""); // renamed
+      setImage(item.image || "");
     } else {
       setTitle("");
       setIngredients("");
@@ -48,7 +48,7 @@ function AddItem({ item, onClose, onAdd }) {
       description: description.trim(),
       instructions: instructions.trim(),
       notes: notes.trim(),
-      image: image.trim(), // renamed
+      image: image.trim(),
     };
 
     setSaving(true);

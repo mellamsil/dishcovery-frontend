@@ -54,6 +54,12 @@
   -webkit-box-orient: vertical;
 }
 
+.recipe-list {
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 @media (max-width: 1024px) {
   .recipe-card {
     max-width: 500px;
@@ -134,6 +140,7 @@
     margin: 6px auto;
     border-radius: 8px;
     flex-direction: column;
+    overflow: hidden;
   }
 
   .recipe-card__image {
@@ -150,11 +157,15 @@
 
   .recipe-card__title {
     font-size: 13px;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .recipe-card__description {
     font-size: 11px;
     line-height: 1.2;
     -webkit-line-clamp: 3;
+    overflow: hidden;
   }
 }

@@ -7,7 +7,7 @@ function RecipeDetailModal({ recipe, isSaving, onClose, onSave }) {
   // --- Handle close ---
   const handleClose = useCallback(() => {
     setClosing(true);
-    setTimeout(() => onClose(), 250); // match animation duration
+    setTimeout(() => onClose(), 250);
   }, [onClose]);
 
   // --- Handle Escape key ---

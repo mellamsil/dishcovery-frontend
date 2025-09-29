@@ -43,7 +43,6 @@ const SideBar = ({
 
       {/* Actions */}
       <div className="sidebar__actions">
-        {/* Favorites toggle */}
         <button
           className={`sidebar__btn show-favorites ${
             showFavoritesOnly ? "active" : ""

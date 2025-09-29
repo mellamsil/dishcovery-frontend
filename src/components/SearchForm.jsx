@@ -6,7 +6,7 @@ function SearchForm({ onResults }) {
   const [query, setQuery] = useState("");
   const [diet, setDiet] = useState("");
   const [ingredients, setIngredients] = useState("");
-  const [mode, setMode] = useState("keyword"); // "keyword" or "ingredients"
+  const [mode, setMode] = useState("keyword");
 
   const handleSubmit = (e) => {
     e.preventDefault();

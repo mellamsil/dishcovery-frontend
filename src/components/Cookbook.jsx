@@ -150,8 +150,6 @@ function Cookbook({ isSignedIn }) {
         </>
       )}
 
-      {/* ===== Modals ===== */}
-
       {showEditConfirm && activeItem && (
         <EditRecipeConfirm
           item={activeItem}
@@ -179,7 +177,6 @@ function Cookbook({ isSignedIn }) {
         />
       )}
 
-      {/* ===== Notification Toast ===== */}
       {notification && (
         <div
           className={`cookbook__notification ${notificationType}`}

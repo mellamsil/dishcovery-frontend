@@ -9,7 +9,7 @@ const ModalWithForm = forwardRef(
       onSubmit,
       children,
       submitText = "Submit",
-      secondaryText,
+      secondaryText = "Cancel",
       secondaryAction,
       isLoading = false,
       closeIcon,
@@ -22,7 +22,7 @@ const ModalWithForm = forwardRef(
     // ESC key to close modal
     useEffect(() => {
       const handleEsc = (e) => {
-        if (e.key === "Escape") onClose();
+        if (e.key === "Escape" && onClose) onClose();
       };
       window.addEventListener("keydown", handleEsc);
       return () => window.removeEventListener("keydown", handleEsc);
@@ -34,12 +34,13 @@ const ModalWithForm = forwardRef(
         role="dialog"
         aria-modal="true"
         onClick={(e) => {
-          if (e.target.classList.contains("modal-overlay")) onClose();
+          if (e.target.classList.contains("modal-overlay") && onClose)
+            onClose();
         }}
       >
         <div className="modal" ref={ref} onClick={(e) => e.stopPropagation()}>
           {/* Close icon */}
-          {closeIcon && (
+          {closeIcon && onClose && (
             <button
               type="button"
               className="modal-close-button"
@@ -69,11 +70,12 @@ const ModalWithForm = forwardRef(
                   {isLoading ? "Loading..." : submitText}
                 </button>
 
-                {secondaryText && secondaryAction && (
+                {/* Always render secondary button if secondaryText exists */}
+                {secondaryText && (
                   <button
                     type="button"
                     className="btn-cancel"
-                    onClick={secondaryAction}
+                    onClick={secondaryAction || onClose}
                     disabled={isLoading}
                   >
                     {secondaryText}

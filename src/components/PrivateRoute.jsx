@@ -1,17 +1,11 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
-const PrivateRoute = ({ children }) => {
-  const { currentUser, loading } = useContext(CurrentUserContext);
+const PrivateRoute = ({ isLoggedIn, children }) => {
   const location = useLocation();
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  if (!currentUser) {
-    // Redirect to homepage instead of /signin
+  if (!isLoggedIn) {
+    // Redirect to homepage if not logged in
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 
