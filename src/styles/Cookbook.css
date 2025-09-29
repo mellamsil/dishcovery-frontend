@@ -4,7 +4,6 @@
   padding: 20px;
 }
 
-/* === Header === */
 .cookbook__header {
   display: flex;
   justify-content: space-between;
@@ -28,7 +27,6 @@
   transform: translateY(-2px);
 }
 
-/* === Recipe List === */
 .cookbook-list {
   list-style: none;
   margin: 0;
@@ -75,7 +73,6 @@
   color: #222;
 }
 
-/* === Notification Toast === */
 .cookbook__notification {
   position: fixed;
   bottom: 20px;
@@ -101,7 +98,6 @@
   background-color: #f44336;
 }
 
-/* === Actions (Edit & Remove) === */
 .cookbook-actions {
   display: flex;
   gap: 8px;
@@ -149,7 +145,6 @@
   transform: translateY(-2px);
 }
 
-/* === Show More Button === */
 .cookbook__show-more {
   display: block;
   margin: 16px auto;
@@ -169,7 +164,6 @@
   transform: translateY(-2px);
 }
 
-/* === Edit Recipe Confirmation Modal === */
 .edit-recipe-confirm {
   background-color: #ff9800;
   color: #fff;
@@ -205,7 +199,6 @@
   color: #fff;
 }
 
-/* === Animations === */
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -224,9 +217,6 @@
   }
 }
 
-/* === Responsiveness === */
-
-/* Tablet (768px - 1024px) */
 @media (max-width: 1024px) {
   .cookbook {
     padding: 16px;
@@ -265,7 +255,6 @@
   }
 }
 
-/* iPad Portrait (~768px) */
 @media (max-width: 768px) {
   .cookbook-item {
     flex-direction: column;
@@ -320,7 +309,6 @@
   }
 }
 
-/* Mobile (480px and below) */
 @media (max-width: 480px) {
   .cookbook {
     padding: 12px;
@@ -354,6 +342,51 @@
   }
 
   .edit-recipe-confirm .modal-buttons button {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .cookbook {
+    padding: 8px;
+  }
+
+  .cookbook-item__image {
+    width: 100%;
+    height: auto;
+  }
+
+  .cookbook-item__content {
+    padding: 8px;
+  }
+
+  .cookbook__show-more {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+
+  .edit-recipe-confirm {
+    width: 95%;
+    padding: 10px;
+  }
+
+  .edit-recipe-confirm h2 {
+    font-size: 0.95rem;
+  }
+
+  .edit-recipe-confirm p {
+    font-size: 0.8rem;
+  }
+
+  .edit-recipe-confirm .modal-buttons button {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+  }
+
+  .cookbook__notification {
+    bottom: 6px;
+    right: 6px;
     padding: 5px 10px;
     font-size: 0.8rem;
   }

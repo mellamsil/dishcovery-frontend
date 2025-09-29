@@ -16,7 +16,7 @@
 
 .item-card__image {
   width: 100%;
-  height: 180px; /* slightly taller for tablets */
+  height: 180px;
   object-fit: cover;
 }
 
@@ -40,7 +40,6 @@
   line-height: 1.3;
 }
 
-/* Instructions */
 .item-card__instructions {
   font-size: 13px;
   color: #0077cc;
@@ -50,7 +49,6 @@
   border-left: 2px solid #0077cc;
 }
 
-/* Notes */
 .item-card__notes {
   font-size: 12px;
   color: #666;
@@ -61,7 +59,6 @@
   border-left: 2px dotted #999;
 }
 
-/* Delete button */
 .btn-delete {
   margin-top: 8px;
   padding: 6px 12px;
@@ -79,7 +76,6 @@
   background-color: #990000;
 }
 
-/* Tablet responsiveness */
 @media (max-width: 768px) {
   .item-card__image {
     height: 160px;
@@ -107,7 +103,6 @@
   }
 }
 
-/* Mobile responsiveness */
 @media (max-width: 480px) {
   .item-card__image {
     height: 140px;
@@ -129,5 +124,47 @@
   .btn-delete {
     font-size: 11px;
     padding: 4px 8px;
+  }
+}
+
+@media (max-width: 360px) {
+  body,
+  html {
+    overflow-x: hidden;
+  }
+
+  .item-card {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 6px;
+  }
+
+  .item-card__content {
+    padding: 8px;
+  }
+
+  .item-card__image {
+    width: 100%;
+    height: 120px;
+  }
+
+  .item-card__title {
+    font-size: 13px;
+  }
+
+  .item-card__description,
+  .item-card__instructions,
+  .item-card__notes {
+    font-size: 11px;
+  }
+
+  .btn-delete {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+
+  .hero-imac__mockup {
+    width: 280px;
+    aspect-ratio: 1.3;
   }
 }

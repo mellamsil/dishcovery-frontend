@@ -67,7 +67,6 @@ header {
   color: #888;
 }
 
-/* Responsive adjustments */
 @media (max-width: 1024px) {
   .main-content {
     padding: 24px 0;
@@ -103,5 +102,33 @@ header {
   .logo {
     height: 48px;
     padding: 8px;
+  }
+}
+
+@media (max-width: 360px) {
+  #root {
+    padding: 0 8px;
+  }
+
+  .main-content {
+    padding: 6px 0;
+  }
+
+  .logo {
+    height: 40px;
+    padding: 6px;
+  }
+
+  .recipe-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .read-the-docs {
+    font-size: 12px;
   }
 }

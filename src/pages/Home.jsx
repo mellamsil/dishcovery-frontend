@@ -8,9 +8,6 @@ import ErrorMessage from "../components/ErrorMessage";
 import { fetchData, saveRecipe } from "../utils";
 import "../styles/Home.css";
 
-import Signin from "./Signin"; // ← import Signin modal
-import RegisterModal from "../modals/RegisterModal";
-
 import spaghettiImg from "../assets/images/spaghetti.jpg";
 import curryImg from "../assets/images/curry-chicken.jpg";
 import saladImg from "../assets/images/caesar-salad.jpg";
@@ -113,10 +110,6 @@ function Home() {
   const [error, setError] = useState(null);
   const [visibleCount, setVisibleCount] = useState(3);
 
-  // NEW: modal state
-  const [showSignIn, setShowSignIn] = useState(false);
-  const [showRegister, setShowRegister] = useState(false);
-
   const doSearch = useCallback(
     (q = query) => {
       const stored = localStorage.getItem("recipes");
@@ -183,24 +176,6 @@ function Home() {
         </div>
       )}
 
-      {/* NEW: Sign In / Register Modals */}
-      {showSignIn && (
-        <Signin
-          onSwitchToRegister={() => {
-            setShowSignIn(false);
-            setShowRegister(true);
-          }}
-        />
-      )}
-      {showRegister && (
-        <Register
-          onSwitchToSignIn={() => {
-            setShowRegister(false);
-            setShowSignIn(true);
-          }}
-        />
-      )}
-
       {/* Hero Section */}
       <section className="hero">
         <div className="hero__left">
@@ -208,7 +183,6 @@ function Home() {
             <h2>Welcome to Dishcovery!</h2>
           </div>
           <div className="hero__left-content">
-            {/* ← KEEP THIS WELCOME MESSAGE EXACTLY AS IS → */}
             <p>
               Welcome to Dishcovery, the place where you can find your next
               culinary adventure! We are so glad you are here. Get ready to
@@ -244,24 +218,6 @@ function Home() {
               <li>Save favorites into a private cookbook</li>
               <li>Edit or delete recipes as you like</li>
             </ul>
-
-            {/* NEW: Show Sign In / Register buttons if not logged in */}
-            {!currentUser && (
-              <div className="home__auth-buttons">
-                <button
-                  className="home__btn signin-btn"
-                  onClick={() => setShowSignIn(true)}
-                >
-                  Sign In
-                </button>
-                <button
-                  className="home__btn register-btn"
-                  onClick={() => setShowRegister(true)}
-                >
-                  Register
-                </button>
-              </div>
-            )}
           </div>
         </div>
 

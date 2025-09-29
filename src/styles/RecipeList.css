@@ -12,7 +12,6 @@
   text-align: center;
 }
 
-/* Tablet: 768px - 1024px */
 @media (max-width: 1024px) {
   .recipe-list {
     gap: 0.8rem;
@@ -24,7 +23,6 @@
   }
 }
 
-/* iPad Portrait: ~768px */
 @media (max-width: 768px) {
   .recipe-list {
     gap: 0.7rem;
@@ -36,14 +34,26 @@
   }
 }
 
-/* Mobile: 480px and below */
 @media (max-width: 480px) {
   .recipe-list {
     gap: 0.5rem;
-    grid-template-columns: 1fr; /* single column for small screens */
+    grid-template-columns: 1fr;
   }
 
   .recipe-list__empty {
     font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .recipe-list {
+    gap: 0.4rem;
+    grid-template-columns: 1fr;
+    padding: 0 4px;
+  }
+
+  .recipe-list__empty {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
   }
 }

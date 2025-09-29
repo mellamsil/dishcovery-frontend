@@ -12,7 +12,6 @@
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  /* border: 2px solid #ff6f61; */
   border: 2px solid #d1d5db;
   margin-bottom: 12px;
 }
@@ -212,5 +211,56 @@
     width: auto;
     padding: 6px 10px;
     font-size: 13px;
+  }
+}
+
+@media (max-width: 360px) {
+  .sidebar.dashboard__sidebar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .sidebar__avatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .sidebar__name {
+    font-size: 14px;
+  }
+
+  .sidebar__stats {
+    gap: 6px;
+    width: 100%;
+  }
+
+  .sidebar__stat-card h3 {
+    font-size: 16px;
+  }
+
+  .sidebar__stat-card p {
+    font-size: 12px;
+  }
+
+  .sidebar__btn.show-favorites,
+  .sidebar__btn.show-intro {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .sidebar__search-wrapper {
+    padding: 4px 6px;
+  }
+
+  .sidebar__search {
+    font-size: 12px;
+    padding: 6px 28px 6px 28px;
+  }
+
+  .sidebar__search-icon {
+    left: 6px;
+    font-size: 14px;
   }
 }

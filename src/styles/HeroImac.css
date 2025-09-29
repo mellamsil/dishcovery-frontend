@@ -1,7 +1,6 @@
 .hero-imac__mockup {
   position: relative;
   width: 700px;
-  /* height: 500px; */
   aspect-ratio: 1.3;
   background-size: contain;
   background-repeat: no-repeat;
@@ -116,5 +115,31 @@
   }
   .imac-recipe-desc {
     font-size: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-imac__mockup {
+    width: 90%;
+    max-width: 280px;
+  }
+
+  .imac-recipe-item {
+    grid-template-columns: 60px 1fr;
+    gap: 4px;
+    padding: 4px;
+  }
+
+  .imac-recipe-image {
+    width: 60px;
+    height: 45px;
+  }
+
+  .imac-recipe-title {
+    font-size: 11px;
+  }
+
+  .imac-recipe-desc {
+    font-size: 9px;
   }
 }

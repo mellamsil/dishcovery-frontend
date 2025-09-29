@@ -15,11 +15,8 @@ import "./App.css";
 
 function App() {
   const [currentUser] = useState(null);
-  const [userRecipes, setUserRecipes] = useState([]);
 
-  // --- Auth Modal State ---
-  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [userRecipes, setUserRecipes] = useState([]);
 
   // --- Handlers ---
   const handleAddItem = (newItem) => {
@@ -35,26 +32,9 @@ function App() {
     );
   };
 
-  // --- Auth Modal Handlers ---
-  const openRegister = () => {
-    setIsRegisterOpen(true);
-    setIsLoginOpen(false);
-  };
-
-  const openLogin = () => {
-    setIsLoginOpen(true);
-    setIsRegisterOpen(false);
-  };
-
-  const closeModals = () => {
-    setIsRegisterOpen(false);
-    setIsLoginOpen(false);
-  };
-
   return (
     <>
-      <Header onOpenRegister={openRegister} onOpenLogin={openLogin} />
-
+      <Header />
       <main className="main-content">
         <Routes>
           {/* Public Routes */}
@@ -96,16 +76,7 @@ function App() {
           />
         </Routes>
       </main>
-
       <Footer />
-
-      {/* --- Auth Modals --- */}
-      {isRegisterOpen && (
-        <Signup onClose={closeModals} onSwitchToLogin={openLogin} />
-      )}
-      {isLoginOpen && (
-        <Signin onClose={closeModals} onSwitchToRegister={openRegister} />
-      )}
     </>
   );
 }

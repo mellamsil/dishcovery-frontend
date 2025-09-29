@@ -343,3 +343,52 @@
     height: 90%;
   }
 }
+
+@media (max-width: 360px) {
+  .hero {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .hero__left-content {
+    gap: 8px;
+  }
+
+  .hero__search {
+    gap: 6px;
+  }
+
+  .hero__search-input,
+  .hero__search-button {
+    width: 100%;
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+
+  .hero-imac {
+    max-width: 100%;
+  }
+
+  .home__recipe-list {
+    gap: 8px;
+  }
+
+  .imac-recipe-item {
+    grid-template-columns: 70px 1fr;
+    padding: 6px;
+  }
+
+  .imac-recipe-image {
+    width: 70px;
+    height: 55px;
+  }
+
+  .hero__headline {
+    font-size: 22px;
+  }
+
+  .hero__sub,
+  .hero__features {
+    font-size: 12px;
+  }
+}
