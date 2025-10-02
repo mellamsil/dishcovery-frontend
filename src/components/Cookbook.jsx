@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetchData, saveRecipe, deleteRecipe } from "../utils/api.mock.js"; // Switch to api.js in production
+import { fetchData, saveRecipe, deleteRecipe } from "../utils/api.mock.js";
 import AddItem from "./AddItem";
 import DeleteConfirm from "./DeleteConfirm";
 import EditRecipeConfirm from "./EditRecipeConfirm";
@@ -104,10 +104,12 @@ function Cookbook({ isSignedIn }) {
             {displayedRecipes.map((r) => (
               <li key={r._id} className="cookbook-item">
                 <img
-                  src={r.image || "/images/placeholder.png"}
+                  src={r.image || "/images/user-placeholder.png"}
                   alt={r.title}
                   className="cookbook-item__image"
-                  onError={(e) => (e.target.src = "/images/placeholder.png")}
+                  onError={(e) =>
+                    (e.target.src = "/images/user-placeholder.png")
+                  }
                 />
                 <div className="cookbook-item__content">
                   <strong className="cookbook-item__title">{r.title}</strong>

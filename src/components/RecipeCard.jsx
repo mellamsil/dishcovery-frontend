@@ -1,10 +1,12 @@
 import React from "react";
 import "../styles/RecipeCard.css";
 
-function RecipeCard({ recipe, onOpen }) {
+function RecipeCard({ recipe, onOpen, isPreview }) {
   return (
     <article
-      className="recipe-card"
+      className={`recipe-card ${
+        isPreview ? "recipe-card--preview-active" : ""
+      }`}
       onClick={() => onOpen && onOpen(recipe)}
       tabIndex={0}
     >
@@ -24,6 +26,15 @@ function RecipeCard({ recipe, onOpen }) {
           {recipe.description || "No description available."}
         </p>
       </div>
+
+      {isPreview && (
+        <div className="recipe-card__preview">
+          <h3 className="recipe-card__preview-title">Preview</h3>
+          <p className="recipe-card__preview-details">
+            {recipe.details || "No details available."}
+          </p>
+        </div>
+      )}
     </article>
   );
 }

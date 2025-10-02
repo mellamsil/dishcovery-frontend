@@ -15,6 +15,7 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
     terms: false,
   });
 
+  const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const modalRef = useRef(null);
@@ -40,6 +41,14 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
     }));
   };
 
+  const handleFileChange = (e) => {
+    const uploadedFile = e.target.files[0];
+    if (uploadedFile) {
+      setFile(uploadedFile);
+      setForm((prev) => ({ ...prev, avatar: uploadedFile }));
+    }
+  };
+
   const validateForm = () => {
     if (!form.name.trim() || form.name.length < 2 || form.name.length > 30)
       return "Name must be between 2 and 30 characters.";
@@ -51,12 +60,26 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
     if (!form.password || form.password.length < 8)
       return "Password must be at least 8 characters.";
 
-    if (!form.avatar.trim())
+    if (
+      !form.avatar ||
+      (typeof form.avatar === "string" && !form.avatar.trim())
+    )
       return "Profile picture or avatar URL is required.";
 
     if (!form.terms) return "You must agree to the Terms and Privacy Policy.";
 
     return null;
+  };
+
+  // Add a helper to calculate form completion
+  const getCompletionPercent = () => {
+    let filled = 0;
+    Object.entries(form).forEach(([key, val]) => {
+      if (key === "terms") {
+        if (val) filled += 1;
+      } else if (val) filled += 1;
+    });
+    return Math.round((filled / 8) * 100);
   };
 
   const handleRegisterClick = () => {
@@ -66,7 +89,9 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
     if (validationError) return setError(validationError);
 
     setLoading(true);
-    onSignUp(form)
+
+    // Pass file + form data to parent onSignUp
+    onSignUp({ ...form, avatarFile: file })
       .catch((err) => setError(err?.message || "Registration failed"))
       .finally(() => setLoading(false));
   };
@@ -122,14 +147,19 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
       </label>
 
       <label>
-        Profile Picture
+        Profile Picture (URL)
         <input
           name="avatar"
           type="text"
-          value={form.avatar}
+          value={typeof form.avatar === "string" ? form.avatar : ""}
           onChange={handleChange}
-          placeholder="Upload a photo or avatar URL"
+          placeholder="Paste an image link"
         />
+      </label>
+
+      <label>
+        Or Upload a Picture
+        <input type="file" accept="image/*" onChange={handleFileChange} />
       </label>
 
       <label>
@@ -179,9 +209,10 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
       <div className="modal__actions modal__actions--inline">
         <button
           type="button"
-          className="btn btn-primary"
+          className="btn btn-primary modal__btn-register"
           onClick={handleRegisterClick}
           disabled={loading}
+          data-completion={getCompletionPercent()}
         >
           {loading ? "Registering..." : "Register"}
         </button>

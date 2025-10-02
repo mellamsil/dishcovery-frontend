@@ -74,10 +74,12 @@ function AddItem({ item, onClose, onAdd }) {
       closeIcon={closeIcon}
     >
       {/* Title */}
-      <label>
+      <label className="modal__label" htmlFor="recipe-title">
         Title:
         <input
+          id="recipe-title"
           type="text"
+          className="modal__input"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Enter recipe title"
@@ -87,9 +89,11 @@ function AddItem({ item, onClose, onAdd }) {
       </label>
 
       {/* Ingredients */}
-      <label>
+      <label className="modal__label" htmlFor="recipe-ingredients">
         Ingredients:
         <textarea
+          id="recipe-ingredients"
+          className="modal__textarea"
           value={ingredients}
           onChange={(e) => setIngredients(e.target.value)}
           placeholder="List ingredients separated by commas or new lines"
@@ -97,11 +101,13 @@ function AddItem({ item, onClose, onAdd }) {
         />
       </label>
 
-      {/* Image */}
-      <label>
+      {/* Image URL input only — no preview inside modal */}
+      <label className="modal__label" htmlFor="recipe-image">
         Image URL:
         <input
+          id="recipe-image"
           type="text"
+          className="modal__input"
           value={image}
           onChange={(e) => setImage(e.target.value)}
           placeholder="Enter image URL"
@@ -110,9 +116,11 @@ function AddItem({ item, onClose, onAdd }) {
       </label>
 
       {/* Description */}
-      <label>
+      <label className="modal__label" htmlFor="recipe-description">
         Description:
         <textarea
+          id="recipe-description"
+          className="modal__textarea"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Brief description"
@@ -121,9 +129,11 @@ function AddItem({ item, onClose, onAdd }) {
       </label>
 
       {/* Instructions */}
-      <label>
+      <label className="modal__label" htmlFor="recipe-instructions">
         Instructions:
         <textarea
+          id="recipe-instructions"
+          className="modal__textarea"
           value={instructions}
           onChange={(e) => setInstructions(e.target.value)}
           placeholder="Step by step instructions"
@@ -132,9 +142,11 @@ function AddItem({ item, onClose, onAdd }) {
       </label>
 
       {/* Notes */}
-      <label>
+      <label className="modal__label" htmlFor="recipe-notes">
         Notes:
         <textarea
+          id="recipe-notes"
+          className="modal__textarea"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Personal notes or tips"

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { FaSearch, FaLightbulb, FaHeart } from "react-icons/fa";
 import "../styles/SideBar.css";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import CurrentUserContext from "../contexts/CurrentUserContext";
 
 const SideBar = ({
   userRecipes = [],
@@ -14,7 +14,8 @@ const SideBar = ({
 }) => {
   const { currentUser } = useContext(CurrentUserContext);
 
-  const avatarSrc = currentUser?.avatar || "/src/assets/images/placeholder.png";
+  const avatarSrc =
+    currentUser?.avatar || "/src/assets/images/user-placeholder.png";
   const fullName = currentUser?.name || "Anonymous User";
 
   return (

@@ -4,7 +4,7 @@ import AddItem from "../modals/AddItem";
 import EditRecipeConfirm from "../modals/EditRecipeConfirm";
 import DeleteConfirm from "../modals/DeleteConfirm";
 import "../styles/Dashboard.css";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import CurrentUserContext from "../contexts/CurrentUserContext";
 
 const Dashboard = ({
   userRecipes = [],
@@ -129,7 +129,7 @@ const Dashboard = ({
                   src={
                     recipe.image && recipe.image.trim() !== ""
                       ? recipe.image
-                      : "/images/placeholder.png"
+                      : "/images/user-placeholder.png"
                   }
                   alt={recipe.title}
                   className="dashboard__cookbook-image"

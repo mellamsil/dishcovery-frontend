@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import "../styles/Profile.css";
 import EditProfileModal from "../modals/EditProfileModal";
 import DeleteConfirm from "../modals/DeleteConfirm";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import CurrentUserContext from "../contexts/CurrentUserContext";
 
-const DEFAULT_AVATAR = "/src/assets/images/placeholder.png";
+const DEFAULT_AVATAR = "/src/assets/images/user-placeholder.png";
 
 const Profile = ({ userRecipes = [], onUpdateProfile, onSignOut }) => {
   const { currentUser } = useContext(CurrentUserContext);
@@ -192,26 +192,26 @@ const Profile = ({ userRecipes = [], onUpdateProfile, onSignOut }) => {
       {/* Achievements */}
       <div className="profile__section profile__achievements">
         <h3>Achievements</h3>
-        <div className="profile__badges">
+        <ul className="profile__badges">
           {totalSubmitted >= 5 && (
-            <div className="badge">
+            <li className="badge">
               <img src="/src/assets/icons/chef-hat.svg" alt="Chef Badge" />
               <p>5+ Recipes Added</p>
-            </div>
+            </li>
           )}
           {totalFavorites >= 10 && (
-            <div className="badge">
+            <li className="badge">
               <img src="/src/assets/icons/star.svg" alt="Favorite Badge" />
               <p>10+ Favorites</p>
-            </div>
+            </li>
           )}
           {totalSubmitted >= 1 && (
-            <div className="badge">
+            <li className="badge">
               <img src="/src/assets/icons/fire.svg" alt="Streak Badge" />
               <p>Weekly Streak</p>
-            </div>
+            </li>
           )}
-        </div>
+        </ul>
       </div>
 
       {/* Dashboard Link */}

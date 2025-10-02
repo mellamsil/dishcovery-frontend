@@ -286,7 +286,7 @@
   background: #c0392b;
 }
 
-.additem-modal-overlay {
+.additem-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -299,8 +299,7 @@
   z-index: 1000;
 }
 
-/* Edit Recipe Modal */
-.edit-modal-overlay {
+.edit-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -313,7 +312,7 @@
   z-index: 1000;
 }
 
-.delete-modal-overlay {
+.delete-modal {
   position: fixed;
   top: 0;
   left: 0;

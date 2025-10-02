@@ -1,4 +1,4 @@
-.modal-overlay {
+.modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -14,7 +14,7 @@
   animation: fadeInOverlay 0.25s forwards;
 }
 
-.modal {
+.modal__container {
   position: relative;
   background: #fff;
   padding: 24px;
@@ -29,57 +29,36 @@
   animation: slideDownModal 0.25s forwards;
 }
 
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-  border-bottom: 1px solid #e5e5e5;
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.modal-title {
+.modal__title {
   margin: 0 0 16px 0;
   font-size: 18px;
-  font-weight: 700;
+  font-weight: bold;
 }
 
-.modal-close-button {
+.modal__close {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 12px;
+  right: 12px;
   background: transparent;
   border: none;
   cursor: pointer;
   padding: 0;
-  display: flex;
-  align-items: center;
-  outline: none;
+  font-size: 24px;
+  line-height: 1;
 }
 
-.modal-close-button img {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-}
-
-.modal-close-icon {
-  position: absolute;
-  top: 12px;
-  right: 12px;
+.modal__close-icon {
   width: 25px;
   height: 25px;
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
 }
 
-.modal-close-icon:hover {
+.modal__close-icon:hover {
   transform: scale(1.2);
 }
 
-.modal form,
-.modal-form {
+.modal__form {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -93,29 +72,6 @@
   font-weight: 500;
   color: #333;
   margin-bottom: 6px;
-}
-
-.modal label:nth-of-type(2) {
-  margin-bottom: 4px;
-}
-.modal label:nth-of-type(3) {
-  margin-top: 2px;
-}
-
-.modal label:nth-of-type(4) {
-  margin-bottom: 4px;
-}
-.modal label:nth-of-type(5) {
-  margin-top: 2px;
-}
-
-.modal hr {
-  margin: 6px 0;
-}
-
-.modal-content {
-  max-height: 80vh;
-  overflow-y: auto;
 }
 
 .modal input,
@@ -134,8 +90,9 @@
 
 .modal textarea {
   min-height: 60px;
+  max-height: 120px;
   resize: vertical;
-  max-height: 100px;
+  line-height: 1.4;
 }
 
 .modal input:focus,
@@ -144,11 +101,100 @@
   outline: none;
 }
 
-.modal textarea {
-  min-height: 60px;
-  max-height: 120px;
-  resize: vertical;
-  line-height: 1.4;
+.modal__actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+  margin-top: 20px;
+}
+
+.modal__btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s ease-in-out;
+}
+
+.modal__btn--primary {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.modal__btn--primary:hover {
+  background-color: #0056b3;
+}
+
+.modal__btn--primary:disabled {
+  background: #999;
+  cursor: not-allowed;
+}
+
+.modal__btn--cancel {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.modal__btn--cancel:hover {
+  background-color: #e0e0e0;
+}
+
+.modal__btn--dirty {
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+.modal__btn-register {
+  background: grey;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.modal__btn-register[data-completion] {
+  background: linear-gradient(
+    to right,
+    grey 0%,
+    grey calc(100% - var(--completion, 0%)),
+    royalblue var(--completion, 0%),
+    royalblue 100%
+  );
+}
+
+.modal__error {
+  color: #cc0000;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.modal__divider {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 12px 0;
+}
+
+.modal__image-wrapper {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.modal__image {
+  display: block;
+  max-width: 100%;
+  max-height: 70vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  margin: 0 auto 16px;
+  border-radius: 10px;
+}
+
+.modal__image-preview {
+  text-align: center;
+  margin: 12px 0;
 }
 
 .checkbox-row {
@@ -169,52 +215,6 @@
   color: #333;
 }
 
-.modal-actions,
-.modal-actions--row,
-.modal__actions--inline {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 16px;
-}
-
-.btn-primary {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background 0.2s ease-in-out;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
-}
-
-.btn-cancel {
-  background-color: #f0f0f0;
-  color: #333;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
-}
-
-.btn-cancel:hover {
-  background-color: #e0e0e0;
-}
-
-.modal-error {
-  color: #cc0000;
-  font-size: 13px;
-  margin-top: 6px;
-}
-
 @keyframes fadeInOverlay {
   to {
     opacity: 1;
@@ -226,14 +226,6 @@
     transform: translateY(0);
     opacity: 1;
   }
-}
-
-.modal-overlay.fade-out {
-  animation: fadeOutOverlay 0.25s forwards;
-}
-
-.modal.fade-out {
-  animation: slideUpModal 0.25s forwards;
 }
 
 @keyframes fadeOutOverlay {
@@ -250,55 +242,61 @@
 }
 
 @media (max-width: 768px) {
-  .modal {
+  .modal__container {
     max-width: 300px;
     padding: 16px;
   }
-  .modal-title {
+
+  .modal__title {
     font-size: 16px;
     margin-bottom: 12px;
   }
+
   .modal input,
   .modal textarea,
   .modal label {
     font-size: 12px;
     padding: 6px;
   }
-  .modal-actions {
+
+  .modal__actions {
     gap: 8px;
   }
 }
 
 @media (max-width: 480px) {
-  .modal {
+  .modal__container {
     max-width: 260px;
     padding: 12px;
     border-radius: 6px;
   }
-  .modal-title {
+
+  .modal__title {
     font-size: 15px;
     margin-bottom: 10px;
   }
+
   .modal input,
   .modal textarea,
   .modal label {
     font-size: 11px;
     padding: 5px;
   }
-  .modal-actions {
+
+  .modal__actions {
     flex-direction: column;
     align-items: stretch;
     gap: 6px;
   }
-  .modal-close-icon,
-  .modal-close-button img {
+
+  .modal__close-icon {
     width: 18px;
     height: 18px;
   }
 }
 
 @media (max-width: 360px) {
-  .modal {
+  .modal__container {
     max-width: 95%;
     padding: 10px;
   }
@@ -308,12 +306,12 @@
     max-width: 100%;
   }
 
-  .modal-title {
+  .modal__title {
     font-size: 14px;
     margin-bottom: 8px;
   }
 
-  .modal-actions {
+  .modal__actions {
     flex-direction: column;
     gap: 5px;
   }

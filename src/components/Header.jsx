@@ -1,9 +1,9 @@
 import React, { useState, useContext } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "../styles/Header.css";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import CurrentUserContext from "../contexts/CurrentUserContext";
 
-const DEFAULT_AVATAR = "/src/assets/images/placeholder.png";
+const DEFAULT_AVATAR = "/src/assets/images/user-placeholder.png";
 
 function Header({ isLoggedIn, onSignOut, openRegisterModal, openLoginModal }) {
   const [isOpen, setIsOpen] = useState(false); // hamburger menu for mobile

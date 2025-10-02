@@ -30,51 +30,54 @@ const ModalWithForm = forwardRef(
 
     return (
       <div
-        className="modal-overlay"
+        className="modal"
         role="dialog"
         aria-modal="true"
         onClick={(e) => {
-          if (e.target.classList.contains("modal-overlay") && onClose)
-            onClose();
+          if (e.target.classList.contains("modal") && onClose) onClose();
         }}
       >
-        <div className="modal" ref={ref} onClick={(e) => e.stopPropagation()}>
+        <div
+          className="modal__container"
+          ref={ref}
+          onClick={(e) => e.stopPropagation()}
+        >
           {/* Close icon */}
           {closeIcon && onClose && (
             <button
               type="button"
-              className="modal-close-button"
+              className="modal__close"
               onClick={onClose}
               aria-label="Close"
             >
-              <img src={closeIcon} alt="Close" />
+              <img src={closeIcon} alt="Close" className="modal__close-icon" />
             </button>
           )}
 
           {/* Modal title */}
-          <h2 className="modal-title">{title}</h2>
+          <h2 className="modal__title">{title}</h2>
 
           {/* Form content */}
-          <form className="modal-form" onSubmit={onSubmit}>
+          <form className="modal__form" onSubmit={onSubmit}>
             {children}
 
             {!hideSubmit && (
-              <div className="modal-actions">
+              <div className="modal__actions">
                 <button
                   type="submit"
-                  className={`btn-primary ${
-                    isDirty ? "btn-primary-dirty" : ""
+                  className={`modal__btn modal__btn--primary ${
+                    isDirty ? "modal__btn--dirty" : ""
                   } ${submitClassName || ""}`}
                   disabled={isLoading}
                 >
                   {isLoading ? "Loading..." : submitText}
                 </button>
 
-                {/* Always render secondary button if secondaryText exists */}
+                {/* Secondary button */}
                 {secondaryText && (
                   <button
                     type="button"
-                    className="btn-cancel"
+                    className="modal__btn modal__btn--cancel"
                     onClick={secondaryAction || onClose}
                     disabled={isLoading}
                   >

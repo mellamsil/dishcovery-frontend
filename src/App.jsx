@@ -11,10 +11,10 @@ import SearchResults from "./pages/SearchResults";
 import PrivateRoute from "./components/PrivateRoute";
 import RegisterModal from "./modals/RegisterModal";
 import LoginModal from "./modals/LoginModal";
-import { CurrentUserContext } from "./contexts/CurrentUserContext";
+import CurrentUserContext from "./contexts/CurrentUserContext";
 import "./App.css";
 
-const DEFAULT_AVATAR = "/src/assets/images/placeholder.png";
+const DEFAULT_AVATAR = "/src/assets/images/user-placeholder.png";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);

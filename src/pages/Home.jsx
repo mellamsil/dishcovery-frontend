@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import { useState, useEffect, useCallback } from "react";
+
 import RecipeCard from "../components/RecipeCard";
 import RecipeDetailModal from "../modals/RecipeDetailModal";
 import HeroImac from "../components/HeroImac";
@@ -96,11 +97,7 @@ const MOCK_RECIPES = [
   },
 ];
 
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
-
 function Home() {
-  const { currentUser } = useContext(CurrentUserContext);
-
   const [query, setQuery] = useState("");
   const [recipes, setRecipes] = useState([]);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
@@ -164,21 +161,6 @@ function Home() {
 
   return (
     <main className="home">
-      {currentUser && (
-        <div className="home__user-info">
-          <img
-            src={
-              currentUser.avatar?.trim() || "/src/assets/images/placeholder.png"
-            }
-            alt={currentUser.name?.trim() || "User Avatar"}
-            className="home__user-avatar"
-          />
-          <span className="home__user-name">
-            {currentUser.name?.trim() || "Anonymous User"}
-          </span>
-        </div>
-      )}
-
       <section className="hero">
         <div className="hero__left">
           <div className="hero__left-title">

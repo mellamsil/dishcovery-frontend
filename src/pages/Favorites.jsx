@@ -12,7 +12,7 @@ const Favorites = ({ userRecipes = [] }) => {
           {favoriteRecipes.map((recipe) => (
             <div key={recipe._id ?? recipe.id} className="favorites__item">
               <img
-                src={recipe.image || "/images/placeholder.png"}
+                src={recipe.image || "/images/user-placeholder.png"}
                 alt={recipe.title}
                 className="favorites__image"
               />

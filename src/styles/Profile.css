@@ -270,9 +270,12 @@
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 16px;
   margin-top: 12px;
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
 }
 
-.badge {
+.profile__badges li {
   background-color: #f8f9fa;
   border-radius: 8px;
   padding: 12px;
@@ -281,17 +284,17 @@
   transition: transform 0.2s;
 }
 
-.badge:hover {
+.profile__badges li:hover {
   transform: translateY(-3px);
 }
 
-.badge img {
+.profile__badges img {
   width: 40px;
   height: 40px;
   margin-bottom: 8px;
 }
 
-.badge p {
+.profile__badges p {
   font-size: 14px;
   color: #444;
   margin: 0;
