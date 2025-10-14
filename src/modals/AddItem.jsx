@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ModalWithForm from "./ModalWithForm";
 import closeIcon from "../assets/icons/close.svg";
+import { createRecipe, updateRecipe } from "../utils/api.js";
 
 function AddItem({ item, onClose, onAdd }) {
   const [title, setTitle] = useState("");
@@ -11,13 +12,7 @@ function AddItem({ item, onClose, onAdd }) {
   const [image, setImage] = useState("");
   const [saving, setSaving] = useState(false);
 
-  const saveRecipe = (recipe) =>
-    new Promise((resolve) => {
-      setTimeout(() => {
-        const saved = { ...recipe, _id: recipe._id || Date.now().toString() };
-        resolve({ success: true, saved });
-      }, 700);
-    });
+  const token = localStorage.getItem("authToken");
 
   useEffect(() => {
     if (item) {
@@ -41,8 +36,7 @@ function AddItem({ item, onClose, onAdd }) {
     e.preventDefault();
     if (!title.trim()) return;
 
-    const newItem = {
-      _id: item?._id || undefined,
+    const recipeData = {
       title: title.trim(),
       ingredients: ingredients.trim(),
       description: description.trim(),
@@ -53,13 +47,23 @@ function AddItem({ item, onClose, onAdd }) {
 
     setSaving(true);
 
-    saveRecipe(newItem).then((res) => {
-      setSaving(false);
-      if (res.success) {
-        onAdd(res.saved);
-        onClose();
-      }
-    });
+    // Decide between create or update
+    const apiCall =
+      item && item._id
+        ? updateRecipe(item._id, recipeData, token)
+        : createRecipe(recipeData, token);
+
+    apiCall
+      .then((saved) => {
+        if (saved) {
+          onAdd(saved);
+          onClose();
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to save recipe:", err.message);
+      })
+      .finally(() => setSaving(false));
   };
 
   return (
@@ -73,86 +77,48 @@ function AddItem({ item, onClose, onAdd }) {
       secondaryAction={onClose}
       closeIcon={closeIcon}
     >
-      {/* Title */}
-      <label className="modal__label" htmlFor="recipe-title">
-        Title:
+      <div className="modal__field">
+        <label>Title</label>
         <input
-          id="recipe-title"
           type="text"
-          className="modal__input"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Enter recipe title"
           required
-          disabled={saving}
         />
-      </label>
-
-      {/* Ingredients */}
-      <label className="modal__label" htmlFor="recipe-ingredients">
-        Ingredients:
+      </div>
+      <div className="modal__field">
+        <label>Ingredients</label>
         <textarea
-          id="recipe-ingredients"
-          className="modal__textarea"
           value={ingredients}
           onChange={(e) => setIngredients(e.target.value)}
-          placeholder="List ingredients separated by commas or new lines"
-          disabled={saving}
         />
-      </label>
-
-      {/* Image URL input only — no preview inside modal */}
-      <label className="modal__label" htmlFor="recipe-image">
-        Image URL:
-        <input
-          id="recipe-image"
-          type="text"
-          className="modal__input"
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
-          placeholder="Enter image URL"
-          disabled={saving}
-        />
-      </label>
-
-      {/* Description */}
-      <label className="modal__label" htmlFor="recipe-description">
-        Description:
+      </div>
+      <div className="modal__field">
+        <label>Description</label>
         <textarea
-          id="recipe-description"
-          className="modal__textarea"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Brief description"
-          disabled={saving}
         />
-      </label>
-
-      {/* Instructions */}
-      <label className="modal__label" htmlFor="recipe-instructions">
-        Instructions:
+      </div>
+      <div className="modal__field">
+        <label>Instructions</label>
         <textarea
-          id="recipe-instructions"
-          className="modal__textarea"
           value={instructions}
           onChange={(e) => setInstructions(e.target.value)}
-          placeholder="Step by step instructions"
-          disabled={saving}
         />
-      </label>
-
-      {/* Notes */}
-      <label className="modal__label" htmlFor="recipe-notes">
-        Notes:
-        <textarea
-          id="recipe-notes"
-          className="modal__textarea"
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          placeholder="Personal notes or tips"
-          disabled={saving}
+      </div>
+      <div className="modal__field">
+        <label>Notes</label>
+        <textarea value={notes} onChange={(e) => setNotes(e.target.value)} />
+      </div>
+      <div className="modal__field">
+        <label>Image URL</label>
+        <input
+          type="text"
+          value={image}
+          onChange={(e) => setImage(e.target.value)}
         />
-      </label>
+      </div>
     </ModalWithForm>
   );
 }

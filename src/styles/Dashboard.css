@@ -151,19 +151,56 @@
 }
 
 .dashboard__cookbook-item {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
   position: relative;
-  background: #fafafa;
+  overflow: hidden;
+  background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  padding: 12px;
+  padding: 8px;
   text-align: center;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .dashboard__cookbook-item:hover {
   background: #f0f0f0;
-  transform: translateY(-4px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard__cookbook-item.selected {
+  border: 2px solid #007bff;
+  box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+  transform: scale(1.02);
+  background-color: #f0f8ff;
+  transition: all 0.2s ease;
+}
+
+/* Editing/Deleting badges */
+.action-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: #007bff;
+  color: #fff;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.dashboard__cookbook-item.editing {
+  border-color: #28a745;
+  background-color: #e6f9ec;
+}
+
+.dashboard__cookbook-item.deleting {
+  border-color: #dc3545;
+  background-color: #fce8e8;
 }
 
 .dashboard__cookbook-image {
@@ -262,7 +299,73 @@
   background-color: #ddd;
 }
 
-/* Delete button on each card */
+.modal-close-icon-topright {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #333;
+  transition: color 0.2s;
+}
+
+.modal-close-icon-topright:hover {
+  color: #ff4d4f;
+}
+
+.card-actions {
+  display: flex;
+  gap: 10px;
+  margin: 8px 0;
+  /* justify-content: flex-start; */
+}
+
+.card-action-btn {
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.card-actions label {
+  font-size: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.card-actions input[type="radio"] {
+  margin-right: 3px;
+}
+
+/* Edit button style */
+.edit-btn {
+  background-color: #f0f8ff;
+  border-color: #4a90e2;
+  color: #4a90e2;
+}
+
+.edit-btn:hover {
+  background-color: #4a90e2;
+  color: #fff;
+}
+
+.delete-btn {
+  background-color: #ffe6e6;
+  border-color: #e94b3c;
+  color: #e94b3c;
+}
+
+.delete-btn:hover {
+  background-color: #e94b3c;
+  color: #fff;
+}
+
 .delete-card-btn {
   position: absolute;
   top: 6px;

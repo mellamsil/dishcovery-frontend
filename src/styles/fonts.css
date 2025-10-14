@@ -124,15 +124,11 @@
   font-style: italic;
 }
 
-/* -------------------------
-   Roboto Fonts (variable)
-------------------------- */
-
 @font-face {
   font-family: "Roboto";
   src: url("../assets/fonts/Roboto-VariableFont_wdth,wght.ttf")
     format("truetype");
-  font-weight: 100 900; /* variable font supports all weights */
+  font-weight: 100 900;
   font-style: normal;
 }
 

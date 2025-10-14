@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ModalWithForm from "./ModalWithForm";
+import { createRecipe } from "../utils/api.js";
 
 function EditRecipeConfirm({ item, onConfirm, onCancel }) {
   const [title, setTitle] = useState("");
@@ -8,6 +9,7 @@ function EditRecipeConfirm({ item, onConfirm, onCancel }) {
   const [instructions, setInstructions] = useState("");
   const [notes, setNotes] = useState("");
   const [saving, setSaving] = useState(false);
+  const token = localStorage.getItem("token");
 
   // Populate form fields when item changes
   useEffect(() => {
@@ -31,6 +33,7 @@ function EditRecipeConfirm({ item, onConfirm, onCancel }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!item) return;
     setSaving(true);
 
     const updatedItem = {
@@ -42,10 +45,12 @@ function EditRecipeConfirm({ item, onConfirm, onCancel }) {
       notes: notes.trim(),
     };
 
-    setTimeout(() => {
-      setSaving(false);
-      onConfirm(updatedItem);
-    }, 500);
+    createRecipe(updatedItem, token)
+      .then((savedItem) => {
+        onConfirm(savedItem);
+        onCancel();
+      })
+      .finally(() => setSaving(false));
   };
 
   if (!item) return null;
@@ -55,15 +60,15 @@ function EditRecipeConfirm({ item, onConfirm, onCancel }) {
       title="Edit Recipe"
       onClose={onCancel}
       onSubmit={handleSubmit}
-      submitText="Save Changes"
+      submitText={saving ? "Saving..." : "Save Changes"}
       secondaryText="Cancel"
       secondaryAction={onCancel}
       isLoading={saving}
     >
-      {/* Top-left Close Icon */}
+      {/* Top-right Close Icon */}
       <button
         type="button"
-        className="modal-close-icon"
+        className="modal-close-icon-topright"
         onClick={onCancel}
         aria-label="Close"
       >

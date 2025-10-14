@@ -6,7 +6,7 @@ import CurrentUserContext from "../contexts/CurrentUserContext";
 const DEFAULT_AVATAR = "/src/assets/images/user-placeholder.png";
 
 function Header({ isLoggedIn, onSignOut, openRegisterModal, openLoginModal }) {
-  const [isOpen, setIsOpen] = useState(false); // hamburger menu for mobile
+  const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { currentUser } = useContext(CurrentUserContext);
@@ -48,7 +48,6 @@ function Header({ isLoggedIn, onSignOut, openRegisterModal, openLoginModal }) {
           </button>
         )}
 
-        {/* Navigation */}
         {!isLoggedIn ? (
           <nav className={`nav ${isOpen ? "open" : ""}`}>
             <Link
@@ -79,7 +78,6 @@ function Header({ isLoggedIn, onSignOut, openRegisterModal, openLoginModal }) {
           </nav>
         ) : (
           <div className="header__user-container">
-            {/* Top row: avatar + name */}
             <div className="header__user-top">
               <img
                 src={getAvatar()}

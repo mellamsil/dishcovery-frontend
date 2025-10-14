@@ -18,7 +18,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
-  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .hero__left {
@@ -174,7 +174,7 @@
 
 .imac-recipe-item {
   display: grid;
-  grid-template-columns: 100px 1fr;
+  grid-template-columns: minmax(70px, 25%) 1fr;
   gap: 12px;
   align-items: center;
   background: #f9f9f9;
@@ -184,6 +184,7 @@
   transition: background 0.2s ease;
   height: 33%;
   box-sizing: border-box;
+  width: 100%;
 }
 
 .imac-recipe-item:hover {
@@ -321,6 +322,44 @@
 
   .imac-recipe-list {
     height: 90%;
+  }
+}
+
+@media (max-width: 400px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+
+  .hero-imac {
+    width: 100%;
+    max-width: 100%;
+    overflow: visible;
+  }
+
+  .hero-imac__screen {
+    width: 100%;
+    left: 0;
+  }
+}
+
+@media (max-width: 386px) {
+  .hero,
+  .home {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .hero__search-input,
+  .hero__search-button {
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+
+  .imac-recipe-item {
+    width: 100%;
+    grid-template-columns: 70px 1fr;
+    margin: 0;
   }
 }
 

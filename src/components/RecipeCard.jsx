@@ -1,13 +1,22 @@
 import React from "react";
 import "../styles/RecipeCard.css";
 
-function RecipeCard({ recipe, onOpen, isPreview }) {
+function RecipeCard({ recipe, onOpen, onSave, isPreview }) {
+  const handleClick = () => {
+    if (onOpen) onOpen(recipe);
+  };
+
+  const handleSave = (e) => {
+    e.stopPropagation();
+    if (onSave) onSave(recipe);
+  };
+
   return (
     <article
       className={`recipe-card ${
         isPreview ? "recipe-card--preview-active" : ""
       }`}
-      onClick={() => onOpen && onOpen(recipe)}
+      onClick={handleClick}
       tabIndex={0}
     >
       {recipe.image && (
@@ -23,8 +32,19 @@ function RecipeCard({ recipe, onOpen, isPreview }) {
           {recipe.title || "Untitled Recipe"}
         </h2>
         <p className="recipe-card__description">
-          {recipe.description || "No description available."}
+          {(recipe.description &&
+            recipe.description
+              .replace(/<\/?[^>]+(>|$)/g, "") // strip HTML tags from Spoonacular
+              .split(" ")
+              .slice(0, 25)
+              .join(" ") + "...") ||
+            "No description available."}
         </p>
+        {onSave && (
+          <button className="recipe-card__save-btn" onClick={handleSave}>
+            Save
+          </button>
+        )}
       </div>
 
       {isPreview && (

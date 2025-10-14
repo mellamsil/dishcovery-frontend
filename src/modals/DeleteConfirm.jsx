@@ -1,24 +1,29 @@
 import React, { useState, useEffect } from "react";
 import ModalWithForm from "./ModalWithForm";
+import { deleteRecipe } from "../utils/api.js";
 
 function DeleteConfirm({ item, itemName, onDelete, onClose, onSignOut }) {
   const [deleting, setDeleting] = useState(false);
+  const token = localStorage.getItem("token");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setDeleting(true);
 
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 600));
-
-      if (item) {
-        onDelete(item._id);
-      } else {
-        onDelete();
-        if (onSignOut) onSignOut();
-      }
+    if (item) {
+      // Call backend to delete
+      deleteRecipe(item._id, token)
+        .then(() => {
+          onDelete(item._id);
+          onClose();
+        })
+        .catch((err) => console.error("Failed to delete recipe:", err.message))
+        .finally(() => setDeleting(false));
+    } else {
+      // Generic delete or sign-out
+      if (onDelete) onDelete();
+      if (onSignOut) onSignOut();
       onClose();
-    } finally {
       setDeleting(false);
     }
   };

@@ -5,7 +5,6 @@ const PrivateRoute = ({ isLoggedIn, children }) => {
   const location = useLocation();
 
   if (!isLoggedIn) {
-    // Redirect to homepage if not logged in
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 

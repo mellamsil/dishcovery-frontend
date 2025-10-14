@@ -169,6 +169,17 @@
   margin-top: 6px;
 }
 
+/* NEW: Modal description — full readable text */
+.modal__description {
+  font-family: "Roboto", sans-serif;
+  font-size: 15px;
+  color: #444;
+  line-height: 1.6;
+  margin-top: 10px;
+  white-space: normal;
+  overflow: visible;
+}
+
 .modal__divider {
   border: none;
   border-top: 1px solid #ddd;

@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { fetchData, saveRecipe, deleteRecipe } from "../utils/api.mock.js";
+import {
+  getRecipes,
+  createRecipe,
+  updateRecipe,
+  deleteRecipe,
+} from "../utils/api.js";
 import AddItem from "./AddItem";
 import DeleteConfirm from "./DeleteConfirm";
 import EditRecipeConfirm from "./EditRecipeConfirm";
@@ -17,55 +22,69 @@ function Cookbook({ isSignedIn }) {
   const [notification, setNotification] = useState("");
   const [notificationType, setNotificationType] = useState("add");
   const [visibleCount, setVisibleCount] = useState(3);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Load cookbook from API
-  useEffect(() => {
+  const token = localStorage.getItem("token");
+
+  // Fetch recipes from backend, optionally with a search query
+  const fetchRecipes = (query = "") => {
     setLoading(true);
-    fetchData("cookbook")
-      .then((res) => {
-        if (res.success) setRecipes(res.data);
+    getRecipes(query)
+      .then((data) => setRecipes(data || []))
+      .catch((err) => {
+        console.error("Failed to fetch recipes:", err.message);
+        setRecipes([]);
       })
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchRecipes();
   }, []);
 
   const handleAddOrEdit = (item) => {
-    saveRecipe(item).then((res) => {
-      if (res.success) {
-        const updated = res.saved;
-        const exists = recipes.some((r) => r._id === updated._id);
+    const apiCall = item._id
+      ? updateRecipe(item._id, item, token)
+      : createRecipe(item, token);
 
-        setRecipes((prev) =>
-          exists
-            ? prev.map((r) => (r._id === updated._id ? updated : r))
-            : [...prev, updated]
-        );
+    apiCall.then((saved) => {
+      if (!saved) return;
 
-        setNotification(
-          exists
-            ? `Updated "${updated.title}" successfully.`
-            : `Added "${updated.title}" to your cookbook.`
-        );
-        setNotificationType(exists ? "edit" : "add");
-        setTimeout(() => setNotification(""), 2000);
-      }
+      const exists = recipes.some((r) => r._id === saved._id);
+      setRecipes((prev) =>
+        exists
+          ? prev.map((r) => (r._id === saved._id ? saved : r))
+          : [...prev, saved]
+      );
+
+      setNotification(
+        exists
+          ? `Updated "${saved.title}" successfully.`
+          : `Added "${saved.title}" to your cookbook.`
+      );
+      setNotificationType(exists ? "edit" : "add");
+      setTimeout(() => setNotification(""), 2000);
     });
   };
 
   const handleDelete = (_id) => {
-    deleteRecipe(_id).then((res) => {
-      if (res.success) {
-        const deleted = recipes.find((r) => r._id === res.deletedId);
-        setRecipes((prev) => prev.filter((r) => r._id !== res.deletedId));
-        setShowDelete(false);
+    deleteRecipe(_id, token).then(() => {
+      const deleted = recipes.find((r) => r._id === _id);
+      setRecipes((prev) => prev.filter((r) => r._id !== _id));
+      setShowDelete(false);
 
-        setNotification(`Deleted "${deleted?.title}" from your cookbook.`);
-        setNotificationType("delete");
-        setTimeout(() => setNotification(""), 2000);
-      }
+      setNotification(`Deleted "${deleted?.title}" from your cookbook.`);
+      setNotificationType("delete");
+      setTimeout(() => setNotification(""), 2000);
     });
   };
 
-  // Prevent access if not signed in
+  const handleSearch = (e) => {
+    e.preventDefault();
+    fetchRecipes(searchQuery);
+    setVisibleCount(3);
+  };
+
   if (!isSignedIn) {
     return (
       <p className="cookbook__signin-msg">
@@ -93,11 +112,22 @@ function Cookbook({ isSignedIn }) {
         </button>
       </div>
 
+      {/* Search */}
+      <form className="cookbook__search" onSubmit={handleSearch}>
+        <input
+          type="text"
+          placeholder="Search recipes..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <button type="submit">Search</button>
+      </form>
+
       {/* Main Content */}
       {loading ? (
         <Preloader text="Loading your cookbook..." />
       ) : recipes.length === 0 ? (
-        <NoResults text="Your cookbook is empty. Add some delicious recipes!" />
+        <NoResults text="No recipes found. Add some delicious recipes!" />
       ) : (
         <>
           <ul className="cookbook-list">
@@ -152,6 +182,7 @@ function Cookbook({ isSignedIn }) {
         </>
       )}
 
+      {/* Modals */}
       {showEditConfirm && activeItem && (
         <EditRecipeConfirm
           item={activeItem}
@@ -179,6 +210,7 @@ function Cookbook({ isSignedIn }) {
         />
       )}
 
+      {/* Notification */}
       {notification && (
         <div
           className={`cookbook__notification ${notificationType}`}

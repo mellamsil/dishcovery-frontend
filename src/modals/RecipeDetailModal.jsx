@@ -1,11 +1,24 @@
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useContext } from "react";
+import CurrentUserContext from "../contexts/CurrentUserContext";
 import "../styles/modal.css";
 
-function RecipeDetailModal({ recipe, isSaving, onClose, onSave }) {
+function RecipeDetailModal({
+  recipe,
+  isSaving,
+  onClose,
+  onSave,
+  onRequireAuth,
+  resetSaving,
+}) {
+  const { isLoggedIn } = useContext(CurrentUserContext);
+
   // Handle modal close with animation
   const handleClose = useCallback(() => {
-    setTimeout(() => onClose(), 250);
-  }, [onClose]);
+    setTimeout(() => {
+      if (resetSaving) resetSaving();
+      onClose();
+    }, 250);
+  }, [onClose, resetSaving]);
 
   // Escape key support
   useEffect(() => {
@@ -18,9 +31,17 @@ function RecipeDetailModal({ recipe, isSaving, onClose, onSave }) {
 
   if (!recipe) return null;
 
+  const handleSave = () => {
+    if (!isLoggedIn) {
+      if (onRequireAuth) onRequireAuth(recipe);
+      return;
+    }
+    onSave(recipe);
+  };
+
   return (
     <div
-      className={`modal`}
+      className="modal"
       role="dialog"
       aria-modal="true"
       aria-labelledby="recipe-title"
@@ -29,8 +50,7 @@ function RecipeDetailModal({ recipe, isSaving, onClose, onSave }) {
         if (e.target.classList.contains("modal")) handleClose();
       }}
     >
-      <div className={`modal__container `}>
-        {/* Close button */}
+      <div className="modal__container">
         <button
           className="modal__close"
           onClick={handleClose}
@@ -39,12 +59,10 @@ function RecipeDetailModal({ recipe, isSaving, onClose, onSave }) {
           ×
         </button>
 
-        {/* Title */}
         <h2 className="modal__title" id="recipe-title">
           {recipe.title}
         </h2>
 
-        {/* Image */}
         {recipe.image && (
           <div className="modal__image-wrapper">
             <img
@@ -55,21 +73,24 @@ function RecipeDetailModal({ recipe, isSaving, onClose, onSave }) {
           </div>
         )}
 
-        {/* Description */}
         <p className="modal__description" id="recipe-description">
-          {recipe.description || "No description available."}
+          {recipe.description
+            ? recipe.description
+                .replace(/<\/?[^>]+(>|$)/g, "")
+                .split(" ")
+                .slice(0, 60)
+                .join(" ") + "..."
+            : "No description available."}
         </p>
 
-        {/* Cooking time */}
         {recipe.cookingTime && (
           <p className="modal__time">Cooking time: {recipe.cookingTime} mins</p>
         )}
 
-        {/* Footer actions */}
         <div className="modal__footer">
           <button
             className="modal__btn modal__btn--primary"
-            onClick={() => onSave(recipe)}
+            onClick={handleSave}
             disabled={isSaving}
           >
             {isSaving ? "Saving..." : "Save to Cookbook"}

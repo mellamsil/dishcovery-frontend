@@ -1,53 +1,76 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000"; // backend base URL
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 // General fetch wrapper
-function request(endpoint, options = {}) {
-  return fetch(`${API_URL}${endpoint}`, {
-    headers: { "Content-Type": "application/json", ...(options.headers || {}) },
-    ...options,
-  })
-    .then((res) => {
-      if (!res.ok) {
-        return res.text().then((errorText) => {
-          throw new Error(errorText || "Request failed");
-        });
-      }
-      return res.json();
-    })
-    .catch((err) => {
-      console.error(`Request error (${endpoint}):`, err.message);
-      throw err;
+async function request(endpoint, options = {}) {
+  try {
+    const res = await fetch(`${API_URL}${endpoint}`, {
+      headers: {
+        "Content-Type": "application/json",
+        ...(options.headers || {}),
+      },
+      ...options,
     });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(errorText || "Request failed");
+    }
+
+    return res.json();
+  } catch (err) {
+    console.error(`Request error (${endpoint}):`, err.message);
+    throw err;
+  }
 }
 
 // Auth Endpoints
-export const signup = (email, password) => {
-  return request("/auth/signup", {
-    method: "POST",
-    body: JSON.stringify({ email, password }),
-  });
-};
+export const signup = (data) =>
+  request("/auth/signup", { method: "POST", body: JSON.stringify(data) });
 
-export const signin = (email, password) => {
-  return request("/auth/signin", {
-    method: "POST",
-    body: JSON.stringify({ email, password }),
-  });
-};
+export const signin = (data) =>
+  request("/auth/signin", { method: "POST", body: JSON.stringify(data) });
 
-// User Ednpoints
+// User Endpoints
 export const getCurrentUser = (token) => {
   if (!token) return Promise.resolve(null);
-
   return request("/users/me", {
     headers: { Authorization: `Bearer ${token}` },
-  }).catch((err) => {
-    console.error("Failed to fetch current user:", err.message);
-    return null;
-  });
+  }).catch(() => null);
 };
 
-// --- Placeholder fetchData ---
-export function fetchData(endpoint) {
-  return Promise.resolve({ data: `Fetched from ${endpoint}` });
-}
+// Recipes Endpoints
+export const getRecipes = (token) => {
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  return request("/recipes", { headers });
+};
+
+export const searchRecipes = (token, query) => {
+  if (!query) return Promise.resolve([]);
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  return request(`/recipes?q=${encodeURIComponent(query)}`, { headers });
+};
+
+export const getRecipeById = (id, token) => {
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  return request(`/recipes/${id}`, { headers });
+};
+
+export const createRecipe = (data, token) =>
+  request("/recipes", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify(data),
+  });
+
+export const updateRecipe = (id, data, token) =>
+  request(`/recipes/${id}`, {
+    method: "PUT",
+    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify(data),
+  });
+
+export const deleteRecipe = (id, token) =>
+  request(`/recipes/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });

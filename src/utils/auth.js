@@ -1,30 +1,31 @@
-export const authorize = (email, password) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (email && password) {
-        resolve({ token: "fake-token-12345" });
-      } else {
-        reject("Invalid credentials");
-      }
-    }, 500);
+import {
+  signup as apiSignup,
+  signin as apiSignin,
+  getCurrentUser as apiGetCurrentUser,
+} from "./api";
+
+// Signup
+export const signup = (data) => {
+  return apiSignup(data).then((res) => {
+    if (res.token) localStorage.setItem("token", res.token);
+    return res;
   });
 };
 
-// Simulate token verification
-export const checkToken = (token) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (token === "fake-token-12345") {
-        resolve({
-          data: {
-            name: "Fake User",
-            email: "fake@example.com",
-            _id: "fake-id",
-          },
-        });
-      } else {
-        reject("Token invalid or expired");
-      }
-    }, 500);
+// Signin
+export const signin = (data) => {
+  return apiSignin(data).then((res) => {
+    if (res.token) localStorage.setItem("token", res.token);
+    return res;
   });
+};
+
+// Get current user
+export const getCurrentUser = () => {
+  const token = localStorage.getItem("token");
+  if (!token) return Promise.resolve(null);
+
+  return apiGetCurrentUser(token)
+    .then((user) => user)
+    .catch(() => null);
 };
