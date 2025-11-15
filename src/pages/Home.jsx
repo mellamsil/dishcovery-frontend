@@ -4,41 +4,46 @@ import HeroImac from "../components/HeroImac";
 import Preloader from "../components/Preloader";
 import NoResults from "../components/NoResults";
 import ErrorMessage from "../components/ErrorMessage";
-import { getRecipes, searchRecipes } from "../utils/api";
+import {
+  getSpoonacularRecipes,
+  searchRecipes,
+  createRecipe,
+} from "../utils/api";
 import "../styles/Home.css";
 
 function Home({ onRecipeClick }) {
+  const MAX_RECIPES = 30;
+
   const [query, setQuery] = useState("");
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [visibleCount, setVisibleCount] = useState(3);
 
-  const token = localStorage.getItem("authToken");
-
-  // Load top Spoonacular recipes
-  const loadRecipes = useCallback(() => {
+  // Load recipes from Spoonacular
+  const loadRecipes = useCallback(function () {
     setLoading(true);
     setError(null);
 
-    getRecipes(token)
-      .then((data) => {
-        // data is already formatted from backend
-        console.log("Recipes loaded:", data);
-        setRecipes(data);
+    getSpoonacularRecipes(MAX_RECIPES)
+      .then(function (data) {
+        const list = Array.isArray(data) ? data : data.recipes || [];
+        setRecipes(list.slice(0, MAX_RECIPES));
       })
-      .catch((err) => {
+      .catch(function (err) {
         console.error("Error fetching recipes:", err);
         setError("Failed to load recipes. Please try again later.");
         setRecipes([]);
       })
-      .finally(() => setLoading(false));
-  }, [token]);
+      .finally(function () {
+        setLoading(false);
+      });
+  }, []);
 
-  // Search Spoonacular recipes
+  // Search recipes
   const doSearch = useCallback(
-    (q = query) => {
-      const searchTerm = q.trim();
+    function (q) {
+      const searchTerm = (q || query).trim();
       if (!searchTerm) {
         loadRecipes();
         return;
@@ -47,17 +52,48 @@ function Home({ onRecipeClick }) {
       setLoading(true);
       setError(null);
 
-      searchRecipes(token, searchTerm)
-        .then((data) => setRecipes(data))
-        .catch(() => setError("Search failed. Please try again."))
-        .finally(() => setLoading(false));
+      searchRecipes(searchTerm)
+        .then(function (data) {
+          const list = Array.isArray(data) ? data : data.results || [];
+          setRecipes(list.slice(0, MAX_RECIPES));
+        })
+        .catch(function (err) {
+          console.error("Search failed:", err);
+          setError("Search failed. Please try again.");
+          setRecipes([]);
+        })
+        .finally(function () {
+          setLoading(false);
+        });
     },
-    [query, loadRecipes, token]
+    [query, loadRecipes]
   );
 
-  useEffect(() => {
-    loadRecipes();
-  }, [loadRecipes]);
+  // Load recipes on mount
+  useEffect(
+    function () {
+      loadRecipes();
+    },
+    [loadRecipes]
+  );
+
+  // Handle saving recipe to cookbook
+  const handleSaveRecipe = function (recipe) {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      alert("You must be logged in to save a recipe.");
+      return;
+    }
+
+    createRecipe(recipe)
+      .then(function () {
+        alert("Recipe saved to your cookbook!");
+      })
+      .catch(function (err) {
+        console.error("Failed to save recipe:", err);
+        alert("Failed to save recipe. Please try again.");
+      });
+  };
 
   const displayedInImac = recipes.slice(0, 3);
   const displayedRecipes = recipes.slice(0, visibleCount);
@@ -83,7 +119,7 @@ function Home({ onRecipeClick }) {
 
             <form
               className="hero__search"
-              onSubmit={(e) => {
+              onSubmit={function (e) {
                 e.preventDefault();
                 doSearch(query);
               }}
@@ -92,7 +128,9 @@ function Home({ onRecipeClick }) {
                 type="text"
                 placeholder="Search recipes..."
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={function (e) {
+                  setQuery(e.target.value);
+                }}
               />
               <button type="submit">Search</button>
             </form>
@@ -119,26 +157,32 @@ function Home({ onRecipeClick }) {
                 <p>No recipes yet</p>
               ) : (
                 <ul className="imac-recipe-list">
-                  {displayedInImac.map((recipe) => (
-                    <li
-                      key={recipe._id}
-                      className="imac-recipe-item"
-                      onClick={() => onRecipeClick(recipe)}
-                    >
-                      <img
-                        src={recipe.image}
-                        alt={recipe.title}
-                        className="imac-recipe-image"
-                        loading="lazy"
-                      />
-                      <div className="imac-recipe-info">
-                        <h3 className="imac-recipe-title">{recipe.title}</h3>
-                        <p className="imac-recipe-desc">
-                          {recipe.description.slice(0, 80) + "..."}
-                        </p>
-                      </div>
-                    </li>
-                  ))}
+                  {displayedInImac.map(function (recipe) {
+                    return (
+                      <li
+                        key={recipe.id || recipe._id}
+                        className="imac-recipe-item"
+                        onClick={function () {
+                          onRecipeClick(recipe);
+                        }}
+                      >
+                        <img
+                          src={recipe.image}
+                          alt={recipe.title}
+                          className="imac-recipe-image"
+                          loading="lazy"
+                        />
+                        <div className="imac-recipe-info">
+                          <h3 className="imac-recipe-title">{recipe.title}</h3>
+                          <p className="imac-recipe-desc">
+                            {(recipe.description || "")
+                              .slice(0, 80)
+                              .concat("...")}
+                          </p>
+                        </div>
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
             </HeroImac>
@@ -155,18 +199,29 @@ function Home({ onRecipeClick }) {
         <div className="home__recipe-list">
           {!loading && !error && recipes.length > 0 ? (
             <>
-              {displayedRecipes.map((recipe) => (
-                <RecipeCard
-                  key={recipe._id}
-                  recipe={recipe}
-                  onOpen={() => onRecipeClick(recipe)}
-                />
-              ))}
+              {displayedRecipes.map(function (recipe) {
+                return (
+                  <RecipeCard
+                    key={recipe.id || recipe._id}
+                    recipe={recipe}
+                    onOpen={function () {
+                      onRecipeClick(recipe);
+                    }}
+                    showSaveButton={false}
+                    onSave={function () {
+                      handleSaveRecipe(recipe);
+                    }}
+                  />
+                );
+              })}
 
-              {visibleCount < recipes.length && (
+              {visibleCount < recipes.length && visibleCount < MAX_RECIPES && (
                 <button
                   className="home__show-more"
-                  onClick={() => setVisibleCount((prev) => prev + 3)}
+                  onClick={function () {
+                    const nextCount = Math.min(visibleCount + 3, MAX_RECIPES);
+                    setVisibleCount(nextCount);
+                  }}
                 >
                   Show more
                 </button>

@@ -3,7 +3,12 @@ import "../styles/modal.css";
 import CloseIcon from "../assets/icons/close.svg";
 import ModalWithForm from "./ModalWithForm";
 
-const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
+const RegisterModal = function ({
+  onClose,
+  onSignUp,
+  onSwitchToLogin,
+  onPostRegister,
+}) {
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -15,102 +20,119 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
     terms: false,
   });
 
-  const [file, setFile] = useState(null);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const modalRef = useRef(null);
 
-  useEffect(() => {
-    const focusable = modalRef.current?.querySelectorAll(
-      "input, button, textarea, a[href]"
-    );
+  useEffect(function () {
+    const focusable = modalRef.current?.querySelectorAll("input, button");
     if (focusable?.length) focusable[0].focus();
   }, []);
 
-  useEffect(() => {
-    const handleEsc = (e) => e.key === "Escape" && onClose();
-    document.addEventListener("keydown", handleEsc);
-    return () => document.removeEventListener("keydown", handleEsc);
-  }, [onClose]);
-
-  const handleChange = (e) => {
+  const handleChange = function (e) {
     const { name, value, type, checked } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
-  const handleFileChange = (e) => {
-    const uploadedFile = e.target.files[0];
-    if (uploadedFile) {
-      setFile(uploadedFile);
-      setForm((prev) => ({ ...prev, avatar: uploadedFile }));
-    }
-  };
-
-  const validateForm = () => {
-    if (!form.name.trim() || form.name.length < 2 || form.name.length > 30)
-      return "Name must be between 2 and 30 characters.";
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!form.email.trim() || !emailRegex.test(form.email))
-      return "Please enter a valid email address.";
-
-    if (!form.password || form.password.length < 8)
-      return "Password must be at least 8 characters.";
-
-    if (
-      !form.avatar ||
-      (typeof form.avatar === "string" && !form.avatar.trim())
-    )
-      return "Profile picture or avatar URL is required.";
-
-    if (!form.terms) return "You must agree to the Terms and Privacy Policy.";
-
-    return null;
-  };
-
-  // Add a helper to calculate form completion
-  const getCompletionPercent = () => {
-    let filled = 0;
-    Object.entries(form).forEach(([key, val]) => {
-      if (key === "terms") {
-        if (val) filled += 1;
-      } else if (val) filled += 1;
+    setForm(function (prev) {
+      return { ...prev, [name]: type === "checkbox" ? checked : value };
     });
-    return Math.round((filled / 8) * 100);
+    setError("");
   };
 
-  const handleRegisterClick = () => {
-    setError(null);
+  const isFormComplete = function () {
+    return (
+      form.name && form.email && form.password && form.avatar && form.terms
+    );
+  };
 
-    const validationError = validateForm();
-    if (validationError) return setError(validationError);
+  const normalizeDietaryPreferences = function (raw) {
+    if (!raw) return [];
+    let parsed = [];
+    try {
+      parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) return parsed.map(String);
+    } catch (err) {
+      // invalid JSON, fallback to comma-separated
+      console.warn("Invalid dietaryPreferences JSON:", err);
+    }
+    return raw
+      .split(",")
+      .map(function (s) {
+        return s.trim();
+      })
+      .filter(Boolean);
+  };
+
+  const normalizePreferences = function (raw) {
+    if (!raw) return {};
+    try {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed))
+        return parsed;
+    } catch (err) {
+      // invalid JSON, fallback to comma list
+      console.warn("Invalid preferences JSON:", err);
+    }
+    const list = raw
+      .split(",")
+      .map(function (s) {
+        return s.trim();
+      })
+      .filter(Boolean);
+    return { notes: list };
+  };
+
+  const handleRegister = function (e) {
+    e.preventDefault();
+
+    if (!isFormComplete()) {
+      setError("All required fields must be filled and Terms accepted.");
+      return;
+    }
 
     setLoading(true);
+    setError("");
 
-    // Pass file + form data to parent onSignUp
-    onSignUp({ ...form, avatarFile: file })
-      .catch((err) => setError(err?.message || "Registration failed"))
-      .finally(() => setLoading(false));
-  };
+    const payload = {
+      name: form.name.trim(),
+      email: form.email.trim(),
+      password: form.password,
+      avatar: form.avatar.trim(),
+      favoriteCuisine: form.favoriteCuisine.trim() || null,
+      dietaryPreferences: normalizeDietaryPreferences(form.dietaryPreferences),
+      preferences: normalizePreferences(form.preferences),
+    };
 
-  const handleSwitchToLogin = () => {
-    if (onSwitchToLogin && typeof onSwitchToLogin === "function") {
-      onSwitchToLogin();
-    } else {
-      console.warn("onSwitchToLogin function is not defined in parent");
-    }
+    onSignUp(payload)
+      .then(function (res) {
+        if (onPostRegister) onPostRegister(res);
+        onClose();
+      })
+      .catch(function (err) {
+        console.error("Registration failed:", err);
+
+        const backendMessage =
+          (err &&
+            err.data &&
+            err.data.validation &&
+            err.data.validation.body &&
+            err.data.validation.body.message) ||
+          (err && err.data && err.data.message) ||
+          err?.message ||
+          "Sign-up failed. Please try again later.";
+
+        setError(backendMessage);
+      })
+      .finally(function () {
+        setLoading(false);
+      });
   };
 
   return (
     <ModalWithForm
-      title="Register"
+      title="Sign Up"
       onClose={onClose}
       ref={modalRef}
       closeIcon={CloseIcon}
-      hideSubmit={true}
+      onSubmit={handleRegister}
     >
       {error && <p className="modal-error">{error}</p>}
 
@@ -127,19 +149,19 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
       <label>
         Email
         <input
-          name="email"
           type="email"
+          name="email"
           value={form.email}
           onChange={handleChange}
-          placeholder="Enter your email address"
+          placeholder="Enter your email"
         />
       </label>
 
       <label>
         Password
         <input
-          name="password"
           type="password"
+          name="password"
           value={form.password}
           onChange={handleChange}
           placeholder="Enter your password"
@@ -147,19 +169,13 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
       </label>
 
       <label>
-        Profile Picture (URL)
+        Avatar URL
         <input
           name="avatar"
-          type="text"
-          value={typeof form.avatar === "string" ? form.avatar : ""}
+          value={form.avatar}
           onChange={handleChange}
-          placeholder="Paste an image link"
+          placeholder="Enter your avatar URL"
         />
-      </label>
-
-      <label>
-        Or Upload a Picture
-        <input type="file" accept="image/*" onChange={handleFileChange} />
       </label>
 
       <label>
@@ -178,7 +194,7 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
           name="dietaryPreferences"
           value={form.dietaryPreferences}
           onChange={handleChange}
-          placeholder="Specific dietary needs"
+          placeholder='Comma-separated or JSON array (e.g., "vegan, gluten-free")'
         />
       </label>
 
@@ -188,7 +204,7 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
           name="preferences"
           value={form.preferences}
           onChange={handleChange}
-          placeholder="e.g., spicy food, desserts"
+          placeholder='JSON object or comma list (e.g., {"theme":"dark"} or "spicy, desserts")'
         />
       </label>
 
@@ -200,28 +216,25 @@ const RegisterModal = ({ onClose, onSignUp, onSwitchToLogin }) => {
           checked={form.terms}
           onChange={handleChange}
         />
-        <label htmlFor="terms" className="checkbox-text">
+        <label htmlFor="terms">
           I agree to the Terms of Service and Privacy Policy
         </label>
       </div>
 
-      {/* Register + Sign In buttons */}
-      <div className="modal__actions modal__actions--inline">
+      <div className="modal__actions">
         <button
-          type="button"
-          className="btn btn-primary modal__btn-register"
-          onClick={handleRegisterClick}
-          disabled={loading}
-          data-completion={getCompletionPercent()}
+          type="submit"
+          className={`btn ${isFormComplete() ? "btn-blue" : "btn-grey"}`}
+          disabled={loading || !isFormComplete()}
         >
-          {loading ? "Registering..." : "Register"}
+          {loading ? "Registering..." : "Sign Up"}
         </button>
         <button
           type="button"
           className="btn btn-secondary"
-          onClick={handleSwitchToLogin}
+          onClick={onSwitchToLogin}
         >
-          or Sign In
+          or Login
         </button>
       </div>
     </ModalWithForm>

@@ -105,7 +105,7 @@
   display: flex;
   gap: 10px;
   justify-content: flex-start;
-  margin-top: 20px;
+  margin-top: 8px;
 }
 
 .modal__btn {
@@ -163,13 +163,17 @@
   );
 }
 
+.modal__btn--saving {
+  background: #007bff;
+  color: white;
+}
+
 .modal__error {
   color: #cc0000;
   font-size: 13px;
   margin-top: 6px;
 }
 
-/* NEW: Modal description — full readable text */
 .modal__description {
   font-family: "Roboto", sans-serif;
   font-size: 15px;
@@ -208,11 +212,33 @@
   margin: 12px 0;
 }
 
+.btn-grey {
+  background-color: #ccc;
+  color: #fff;
+  cursor: not-allowed;
+}
+
+.btn-blue {
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.form-label input {
+  margin-top: 2px;
+}
+
 .checkbox-row {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: 10px;
+  margin-top: 4px;
 }
 
 .checkbox-row input[type="checkbox"] {

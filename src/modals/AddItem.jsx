@@ -11,30 +11,38 @@ function AddItem({ item, onClose, onAdd }) {
   const [notes, setNotes] = useState("");
   const [image, setImage] = useState("");
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
-  const token = localStorage.getItem("authToken");
+  const token =
+    localStorage.getItem("authToken") || localStorage.getItem("token");
 
-  useEffect(() => {
-    if (item) {
-      setTitle(item.title || "");
-      setIngredients(item.ingredients || "");
-      setDescription(item.description || "");
-      setInstructions(item.instructions || "");
-      setNotes(item.notes || "");
-      setImage(item.image || "");
-    } else {
-      setTitle("");
-      setIngredients("");
-      setDescription("");
-      setInstructions("");
-      setNotes("");
-      setImage("");
-    }
-  }, [item]);
+  useEffect(
+    function () {
+      if (item) {
+        setTitle(item.title || "");
+        setIngredients(item.ingredients || "");
+        setDescription(item.description || "");
+        setInstructions(item.instructions || "");
+        setNotes(item.notes || "");
+        setImage(item.image || "");
+      } else {
+        setTitle("");
+        setIngredients("");
+        setDescription("");
+        setInstructions("");
+        setNotes("");
+        setImage("");
+      }
+    },
+    [item]
+  );
 
-  const handleSubmit = (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
     if (!title.trim()) return;
+
+    setSaving(true);
+    setError("");
 
     const recipeData = {
       title: title.trim(),
@@ -45,78 +53,104 @@ function AddItem({ item, onClose, onAdd }) {
       image: image.trim(),
     };
 
-    setSaving(true);
-
-    // Decide between create or update
-    const apiCall =
+    const request =
       item && item._id
         ? updateRecipe(item._id, recipeData, token)
         : createRecipe(recipeData, token);
 
-    apiCall
-      .then((saved) => {
-        if (saved) {
-          onAdd(saved);
-          onClose();
-        }
+    request
+      .then(function (savedRecipe) {
+        onAdd(savedRecipe);
+        onClose();
       })
-      .catch((err) => {
-        console.error("Failed to save recipe:", err.message);
+      .catch(function (err) {
+        console.error("Failed to save recipe:", err.message || err);
+        setError(err.message || "Failed to save recipe");
       })
-      .finally(() => setSaving(false));
-  };
+      .finally(function () {
+        setSaving(false);
+      });
+  }
 
   return (
     <ModalWithForm
       title={item ? "Edit Recipe" : "Add Recipe"}
       onClose={onClose}
       onSubmit={handleSubmit}
-      submitText={saving ? "Saving..." : item ? "Save Changes" : "Add Recipe"}
+      submitText={item ? "Save Changes" : "Add Recipe"}
       isLoading={saving}
       secondaryText="Cancel"
       secondaryAction={onClose}
       closeIcon={closeIcon}
     >
+      {error && <p className="modal__error">{error}</p>}
+
       <div className="modal__field">
         <label>Title</label>
         <input
           type="text"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={function (e) {
+            setTitle(e.target.value);
+          }}
           required
+          disabled={saving}
         />
       </div>
+
       <div className="modal__field">
         <label>Ingredients</label>
         <textarea
           value={ingredients}
-          onChange={(e) => setIngredients(e.target.value)}
+          onChange={function (e) {
+            setIngredients(e.target.value);
+          }}
+          disabled={saving}
         />
       </div>
+
       <div className="modal__field">
         <label>Description</label>
         <textarea
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={function (e) {
+            setDescription(e.target.value);
+          }}
+          disabled={saving}
         />
       </div>
+
       <div className="modal__field">
         <label>Instructions</label>
         <textarea
           value={instructions}
-          onChange={(e) => setInstructions(e.target.value)}
+          onChange={function (e) {
+            setInstructions(e.target.value);
+          }}
+          disabled={saving}
         />
       </div>
+
       <div className="modal__field">
         <label>Notes</label>
-        <textarea value={notes} onChange={(e) => setNotes(e.target.value)} />
+        <textarea
+          value={notes}
+          onChange={function (e) {
+            setNotes(e.target.value);
+          }}
+          disabled={saving}
+        />
       </div>
+
       <div className="modal__field">
         <label>Image URL</label>
         <input
           type="text"
           value={image}
-          onChange={(e) => setImage(e.target.value)}
+          onChange={function (e) {
+            setImage(e.target.value);
+          }}
+          disabled={saving}
         />
       </div>
     </ModalWithForm>

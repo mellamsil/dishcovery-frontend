@@ -1,110 +1,88 @@
-import React, { useState, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
+import CurrentUserContext from "../contexts/CurrentUserContext";
 import ModalWithForm from "./ModalWithForm";
 import closeIcon from "../assets/icons/close.svg";
+import { updateProfile } from "../utils/api";
 
-function EditProfileModal({ currentUser, onClose, onUpdate }) {
-  const [form, setForm] = useState({
-    name: currentUser?.name || "",
-    avatar: currentUser?.avatar || "",
-    email: currentUser?.email || "",
-    newEmail: "",
-    confirmEmail: "",
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
+function EditProfileModal({ isOpen, onClose }) {
+  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
-  const [avatarFile, setAvatarFile] = useState(null);
+  const [name, setName] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const [email, setEmail] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
 
+  // Prefill modal fields from current user when opened
   useEffect(() => {
-    setForm({
-      name: currentUser?.name || "",
-      avatar: currentUser?.avatar || "",
-      email: currentUser?.email || "",
-      newEmail: "",
-      confirmEmail: "",
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-    });
-    setAvatarFile(null);
-  }, [currentUser]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm(function (prev) {
-      return Object.assign({}, prev, { [name]: value });
-    });
-  };
-
-  const handleFileChange = function (e) {
-    var file = e.target.files[0];
-    if (file) {
-      setAvatarFile(file);
-      setForm(function (prev) {
-        return Object.assign({}, prev, { avatar: "" });
-      });
+    if (currentUser && isOpen) {
+      setName(currentUser.name || "");
+      setAvatar(currentUser.avatar || "");
+      setEmail(currentUser.email || "");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setError(null);
     }
-  };
+  }, [currentUser, isOpen]);
 
-  const handleSubmit = function (e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
 
-    if (!form.name.trim()) return setError("Name cannot be empty.");
+    if (!name.trim()) return setError("Name cannot be empty.");
+    if (!email.trim()) return setError("Email cannot be empty.");
 
-    if (form.newEmail || form.confirmEmail) {
-      if (form.newEmail !== form.confirmEmail) {
-        return setError("New email and confirmation do not match.");
-      }
-    }
+    const updates = {};
+    if (name.trim() !== currentUser.name) updates.name = name.trim();
+    if (avatar.trim() !== currentUser.avatar) updates.avatar = avatar.trim();
+    if (email.trim() !== currentUser.email) updates.email = email.trim();
 
-    var passwordUpdate = null;
-    if (form.newPassword || form.confirmPassword) {
-      if (!form.currentPassword)
-        return setError("Current password is required to change password.");
-      if (form.newPassword !== form.confirmPassword)
+    // Handle password change
+    if (currentPassword || newPassword || confirmPassword) {
+      if (!currentPassword)
+        return setError("Please enter your current password to change it.");
+      if (newPassword !== confirmPassword)
         return setError("New password and confirmation do not match.");
-
-      passwordUpdate = {
-        currentPassword: form.currentPassword,
-        newPassword: form.newPassword,
-      };
+      if (newPassword.length < 6)
+        return setError("New password must be at least 6 characters.");
+      updates.currentPassword = currentPassword;
+      updates.newPassword = newPassword;
     }
 
-    setLoading(true);
+    if (Object.keys(updates).length === 0) {
+      setError("No changes detected.");
+      return;
+    }
 
-    // Use Promise instead of async/await
-    onUpdate({
-      name: form.name,
-      avatar: form.avatar,
-      avatarFile: avatarFile,
-      email: form.email,
-      newEmail: form.newEmail || undefined,
-      passwordUpdate: passwordUpdate,
-    })
-      .then(function () {
-        setLoading(false);
+    setIsLoading(true);
+    try {
+      const updatedUser = await updateProfile(updates);
+      if (updatedUser) {
+        setCurrentUser(updatedUser);
         onClose();
-      })
-      .catch(function (err) {
-        setLoading(false);
-        setError(err && err.message ? err.message : "Failed to save profile.");
-      });
+      }
+    } catch (err) {
+      setError(err?.message || "Failed to update profile.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <ModalWithForm
       title="Edit Profile"
+      isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
-      submitText={loading ? "Saving..." : "Save Changes"}
+      submitText={isLoading ? "Saving..." : "Save Changes"}
       secondaryText="Cancel"
       secondaryAction={onClose}
-      isLoading={loading}
-      isDirty={true}
+      isLoading={isLoading}
       closeIcon={closeIcon}
     >
       {error && (
@@ -113,119 +91,106 @@ function EditProfileModal({ currentUser, onClose, onUpdate }) {
         </p>
       )}
 
-      <label className="modal__label" htmlFor="profile-name">
-        Name:
+      {/* Name */}
+      <div className="modal__form-group">
+        <label htmlFor="profile-name" className="modal__label">
+          Name:
+        </label>
         <input
           id="profile-name"
-          name="name"
           type="text"
           className="modal__input"
-          value={form.name}
-          onChange={handleChange}
-          placeholder="Enter your full name"
-          disabled={loading}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Enter your name"
+          disabled={isLoading}
+          required
         />
-      </label>
+      </div>
 
-      <label className="modal__label" htmlFor="profile-avatar">
-        Avatar URL:
+      {/* Avatar */}
+      <div className="modal__form-group">
+        <label htmlFor="profile-avatar" className="modal__label">
+          Avatar URL:
+        </label>
         <input
           id="profile-avatar"
-          name="avatar"
-          type="text"
+          type="url"
           className="modal__input"
-          value={avatarFile ? "" : form.avatar}
-          onChange={handleChange}
+          value={avatar}
+          onChange={(e) => setAvatar(e.target.value)}
           placeholder="Enter avatar URL"
-          disabled={!!avatarFile || loading}
+          disabled={isLoading}
         />
-      </label>
+      </div>
 
-      <label className="modal__label" htmlFor="profile-avatar-file">
-        Or Upload a Picture:
+      {/* Email */}
+      <div className="modal__form-group">
+        <label htmlFor="profile-email" className="modal__label">
+          Email:
+        </label>
         <input
-          id="profile-avatar-file"
-          type="file"
+          id="profile-email"
+          type="email"
           className="modal__input"
-          accept="image/*"
-          onChange={handleFileChange}
-          disabled={loading}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your email"
+          disabled={isLoading}
+          required
         />
-      </label>
+      </div>
 
       <hr className="modal__divider" />
 
-      <label className="modal__label" htmlFor="profile-new-email">
-        New Email:
+      {/* Password Section */}
+      <div className="modal__form-group">
+        <label htmlFor="current-password" className="modal__label">
+          Current Password:
+        </label>
         <input
-          id="profile-new-email"
-          name="newEmail"
-          type="email"
-          className="modal__input"
-          value={form.newEmail}
-          onChange={handleChange}
-          placeholder="Enter new email"
-          disabled={loading}
-        />
-      </label>
-
-      <label className="modal__label" htmlFor="profile-confirm-email">
-        Confirm Email:
-        <input
-          id="profile-confirm-email"
-          name="confirmEmail"
-          type="email"
-          className="modal__input"
-          value={form.confirmEmail}
-          onChange={handleChange}
-          placeholder="Confirm new email"
-          disabled={loading}
-        />
-      </label>
-
-      <hr className="modal__divider" />
-
-      <label className="modal__label" htmlFor="profile-current-password">
-        Current Password:
-        <input
-          id="profile-current-password"
-          name="currentPassword"
+          id="current-password"
           type="password"
           className="modal__input"
-          value={form.currentPassword}
-          onChange={handleChange}
-          placeholder="Current password"
-          disabled={loading}
+          value={currentPassword}
+          onChange={(e) => setCurrentPassword(e.target.value)}
+          placeholder="Enter current password"
+          disabled={isLoading}
+          autoComplete="current-password"
         />
-      </label>
+      </div>
 
-      <label className="modal__label" htmlFor="profile-new-password">
-        New Password:
+      <div className="modal__form-group">
+        <label htmlFor="new-password" className="modal__label">
+          New Password:
+        </label>
         <input
-          id="profile-new-password"
-          name="newPassword"
+          id="new-password"
           type="password"
           className="modal__input"
-          value={form.newPassword}
-          onChange={handleChange}
-          placeholder="New password"
-          disabled={loading}
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          placeholder="Enter new password"
+          disabled={isLoading}
+          autoComplete="new-password"
         />
-      </label>
+      </div>
 
-      <label className="modal__label" htmlFor="profile-confirm-password">
-        Confirm Password:
+      <div className="modal__form-group">
+        <label htmlFor="confirm-password" className="modal__label">
+          Confirm New Password:
+        </label>
         <input
-          id="profile-confirm-password"
-          name="confirmPassword"
+          id="confirm-password"
           type="password"
           className="modal__input"
-          value={form.confirmPassword}
-          onChange={handleChange}
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
           placeholder="Confirm new password"
-          disabled={loading}
+          disabled={isLoading}
+          autoComplete="new-password"
         />
-      </label>
+      </div>
     </ModalWithForm>
   );
 }

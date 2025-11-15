@@ -42,14 +42,13 @@ function Cookbook({ isSignedIn }) {
     fetchRecipes();
   }, []);
 
-  const handleAddOrEdit = (item) => {
+  const _handleAddOrEdit = (item) => {
     const apiCall = item._id
       ? updateRecipe(item._id, item, token)
       : createRecipe(item, token);
 
     apiCall.then((saved) => {
       if (!saved) return;
-
       const exists = recipes.some((r) => r._id === saved._id);
       setRecipes((prev) =>
         exists
@@ -71,6 +70,7 @@ function Cookbook({ isSignedIn }) {
     deleteRecipe(_id, token).then(() => {
       const deleted = recipes.find((r) => r._id === _id);
       setRecipes((prev) => prev.filter((r) => r._id !== _id));
+
       setShowDelete(false);
 
       setNotification(`Deleted "${deleted?.title}" from your cookbook.`);
@@ -198,7 +198,7 @@ function Cookbook({ isSignedIn }) {
         <AddItem
           item={activeItem}
           onClose={() => setShowAdd(false)}
-          onAdd={handleAddOrEdit}
+          onAdd={(saved) => setRecipes((prev) => [...prev, saved])}
         />
       )}
 

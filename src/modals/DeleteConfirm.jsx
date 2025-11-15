@@ -1,47 +1,57 @@
 import React, { useState, useEffect } from "react";
 import ModalWithForm from "./ModalWithForm";
-import { deleteRecipe } from "../utils/api.js";
+import { deleteRecipe } from "../utils/api";
 
 function DeleteConfirm({ item, itemName, onDelete, onClose, onSignOut }) {
   const [deleting, setDeleting] = useState(false);
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("authToken");
 
-  const handleSubmit = (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
     setDeleting(true);
 
-    if (item) {
-      // Call backend to delete
+    if (item && item._id) {
       deleteRecipe(item._id, token)
-        .then(() => {
-          onDelete(item._id);
+        .then(function () {
+          if (onDelete) onDelete(item._id);
           onClose();
         })
-        .catch((err) => console.error("Failed to delete recipe:", err.message))
-        .finally(() => setDeleting(false));
+        .catch(function (err) {
+          console.error("Failed to delete recipe:", err && err.message);
+        })
+        .finally(function () {
+          setDeleting(false);
+        });
     } else {
-      // Generic delete or sign-out
-      if (onDelete) onDelete();
-      if (onSignOut) onSignOut();
+      // For deleting account or generic delete case
+      if (onDelete) {
+        onDelete();
+      } else if (onSignOut) {
+        onSignOut();
+      }
       onClose();
       setDeleting(false);
     }
-  };
+  }
 
-  // ESC key to close modal
-  useEffect(() => {
-    const handleEsc = (e) => {
-      if (e.key === "Escape") {
-        onClose();
+  // ESC key closes modal
+  useEffect(
+    function () {
+      function handleEsc(e) {
+        if (e.key === "Escape") onClose();
       }
-    };
-    document.addEventListener("keydown", handleEsc);
-    return () => document.removeEventListener("keydown", handleEsc);
-  }, [onClose]);
+
+      document.addEventListener("keydown", handleEsc);
+      return function () {
+        document.removeEventListener("keydown", handleEsc);
+      };
+    },
+    [onClose]
+  );
 
   return (
     <ModalWithForm
-      title={`Delete ${itemName || "Item"}`}
+      title={"Delete " + (itemName || "Item")}
       onClose={onClose}
       onSubmit={handleSubmit}
       submitText={deleting ? "Deleting..." : "Yes, Delete"}

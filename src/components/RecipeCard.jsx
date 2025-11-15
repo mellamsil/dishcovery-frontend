@@ -1,15 +1,37 @@
 import React from "react";
 import "../styles/RecipeCard.css";
 
-function RecipeCard({ recipe, onOpen, onSave, isPreview }) {
-  const handleClick = () => {
+function RecipeCard({
+  recipe,
+  onOpen,
+  onSave,
+  isPreview,
+  showSaveButton = true,
+  onRequireLogin,
+}) {
+  const handleClick = function () {
     if (onOpen) onOpen(recipe);
   };
 
-  const handleSave = (e) => {
+  const handleSave = function (e) {
     e.stopPropagation();
+    // If user is not logged in, trigger login modal
+    if (onRequireLogin) {
+      onRequireLogin(recipe);
+      return;
+    }
+
+    // Otherwise, call the save callback
     if (onSave) onSave(recipe);
   };
+
+  const descriptionText = recipe.description
+    ? recipe.description
+        .replace(/<\/?[^>]+(>|$)/g, "")
+        .split(" ")
+        .slice(0, 25)
+        .join(" ") + "..."
+    : "No description available.";
 
   return (
     <article
@@ -27,20 +49,14 @@ function RecipeCard({ recipe, onOpen, onSave, isPreview }) {
           loading="lazy"
         />
       )}
+
       <div className="recipe-card__content">
         <h2 className="recipe-card__title">
           {recipe.title || "Untitled Recipe"}
         </h2>
-        <p className="recipe-card__description">
-          {(recipe.description &&
-            recipe.description
-              .replace(/<\/?[^>]+(>|$)/g, "") // strip HTML tags from Spoonacular
-              .split(" ")
-              .slice(0, 25)
-              .join(" ") + "...") ||
-            "No description available."}
-        </p>
-        {onSave && (
+        <p className="recipe-card__description">{descriptionText}</p>
+
+        {showSaveButton && (
           <button className="recipe-card__save-btn" onClick={handleSave}>
             Save
           </button>

@@ -16,10 +16,11 @@ const ModalWithForm = forwardRef(
       submitClassName,
       isDirty = false,
       hideSubmit = false,
+      showDefaultButtons = true,
     },
     ref
   ) => {
-    // ESC key to close modal
+    // ESC key closes modal
     useEffect(() => {
       const handleEsc = (e) => {
         if (e.key === "Escape" && onClose) onClose();
@@ -28,13 +29,31 @@ const ModalWithForm = forwardRef(
       return () => window.removeEventListener("keydown", handleEsc);
     }, [onClose]);
 
+    // Recursive search for button elements in children
+    const hasChildButtons = (nodes) =>
+      React.Children.toArray(nodes).some((child) => {
+        if (!child || typeof child !== "object") return false;
+        if (
+          child.type === "button" ||
+          (child.props && child.props.type === "submit")
+        )
+          return true;
+        if (child.props && child.props.children)
+          return hasChildButtons(child.props.children);
+        return false;
+      });
+
+    const containsButtons = hasChildButtons(children);
+
     return (
       <div
         className="modal"
         role="dialog"
         aria-modal="true"
         onClick={(e) => {
-          if (e.target.classList.contains("modal") && onClose) onClose();
+          if (e.target.classList.contains("modal") && onClose) {
+            onClose();
+          }
         }}
       >
         <div
@@ -42,7 +61,7 @@ const ModalWithForm = forwardRef(
           ref={ref}
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Close icon */}
+          {/* <button onClick={() => console.log("test")}>test</button> */}
           {closeIcon && onClose && (
             <button
               type="button"
@@ -54,17 +73,24 @@ const ModalWithForm = forwardRef(
             </button>
           )}
 
-          {/* Modal title */}
           <h2 className="modal__title">{title}</h2>
 
-          {/* Form content */}
-          <form className="modal__form" onSubmit={onSubmit}>
+          <form
+            className="modal__form"
+            onSubmit={(e) => {
+              e.preventDefault();
+
+              console.log("modal submitted");
+              onSubmit(e);
+            }}
+          >
             {children}
 
-            {!hideSubmit && (
+            {!hideSubmit && showDefaultButtons && !containsButtons && (
               <div className="modal__actions">
                 <button
                   type="submit"
+                  onClick={() => console.log("button clicked")}
                   className={`modal__btn modal__btn--primary ${
                     isDirty ? "modal__btn--dirty" : ""
                   } ${submitClassName || ""}`}
@@ -73,7 +99,6 @@ const ModalWithForm = forwardRef(
                   {isLoading ? "Loading..." : submitText}
                 </button>
 
-                {/* Secondary button */}
                 {secondaryText && (
                   <button
                     type="button"

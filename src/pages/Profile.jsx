@@ -9,28 +9,24 @@ const DEFAULT_AVATAR = "/src/assets/images/user-placeholder.png";
 
 const Profile = ({ userRecipes = [], onUpdateProfile, onSignOut }) => {
   const { currentUser } = useContext(CurrentUserContext);
-  const [editingPreferences, setEditingPreferences] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   if (!currentUser) return <p>Loading profile...</p>;
 
-  const { name, email, bio, avatar, preferences } = currentUser;
-
+  const { name, email, bio, avatar } = currentUser;
   const totalSubmitted = userRecipes.length;
   const totalFavorites = userRecipes.filter((r) => r.isFavorite).length;
   const recentRecipes = userRecipes.slice(0, 3);
 
-  const handleSaveProfile = async (updatedInfo) => {
-    try {
-      if (onUpdateProfile) {
-        await onUpdateProfile(updatedInfo);
-      }
-      setShowEditModal(false);
-    } catch (err) {
-      console.error("Failed to save profile:", err);
-      alert(err.message || "Failed to update profile");
-    }
+  const handleUpdateUser = (updatedData) => {
+    return onUpdateProfile(updatedData)
+      .then(() => {
+        setIsEditProfileOpen(false);
+      })
+      .catch((err) => {
+        console.error("Profile update failed:", err);
+      });
   };
 
   const handleDeleteAccount = () => {
@@ -38,7 +34,7 @@ const Profile = ({ userRecipes = [], onUpdateProfile, onSignOut }) => {
     setShowDeleteModal(false);
   };
 
-  const getAvatar = () => (avatar?.trim() !== "" ? avatar : DEFAULT_AVATAR);
+  const getAvatar = () => (avatar?.trim() ? avatar : DEFAULT_AVATAR);
 
   return (
     <div className="profile">
@@ -59,7 +55,7 @@ const Profile = ({ userRecipes = [], onUpdateProfile, onSignOut }) => {
           {bio && <p className="profile__bio">{bio}</p>}
           <button
             className="profile__btn edit-profile"
-            onClick={() => setShowEditModal(true)}
+            onClick={() => setIsEditProfileOpen(true)}
           >
             Edit Profile
           </button>
@@ -77,88 +73,6 @@ const Profile = ({ userRecipes = [], onUpdateProfile, onSignOut }) => {
             Delete Account
           </button>
         </div>
-      </div>
-
-      {/* Preferences */}
-      <div className="profile__section">
-        <h3>Preferences</h3>
-        {!editingPreferences ? (
-          <div className="profile__preferences-view">
-            <p>Favorite Cuisine: {preferences?.favoriteCuisine || "N/A"}</p>
-            <p>Dietary: {preferences?.dietary || "N/A"}</p>
-            <p>Notifications: {preferences?.notifications ? "On" : "Off"}</p>
-            <button
-              className="profile__btn edit-profile"
-              onClick={() => setEditingPreferences(true)}
-            >
-              Edit Preferences
-            </button>
-          </div>
-        ) : (
-          <div className="profile__preferences-edit">
-            <label>
-              Favorite Cuisine:
-              <input
-                type="text"
-                value={preferences?.favoriteCuisine || ""}
-                onChange={(e) =>
-                  handleSaveProfile({
-                    ...currentUser,
-                    preferences: {
-                      ...preferences,
-                      favoriteCuisine: e.target.value,
-                    },
-                  })
-                }
-              />
-            </label>
-            <label>
-              Dietary:
-              <input
-                type="text"
-                value={preferences?.dietary || ""}
-                onChange={(e) =>
-                  handleSaveProfile({
-                    ...currentUser,
-                    preferences: { ...preferences, dietary: e.target.value },
-                  })
-                }
-              />
-            </label>
-            <label>
-              Notifications:
-              <select
-                value={preferences?.notifications ? "On" : "Off"}
-                onChange={(e) =>
-                  handleSaveProfile({
-                    ...currentUser,
-                    preferences: {
-                      ...preferences,
-                      notifications: e.target.value === "On",
-                    },
-                  })
-                }
-              >
-                <option value="On">On</option>
-                <option value="Off">Off</option>
-              </select>
-            </label>
-            <div className="profile__preferences-actions">
-              <button
-                className="profile__btn save-btn"
-                onClick={() => setEditingPreferences(false)}
-              >
-                Save
-              </button>
-              <button
-                className="profile__btn cancel-btn"
-                onClick={() => setEditingPreferences(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Activity */}
@@ -189,31 +103,6 @@ const Profile = ({ userRecipes = [], onUpdateProfile, onSignOut }) => {
         </div>
       </div>
 
-      {/* Achievements */}
-      <div className="profile__section profile__achievements">
-        <h3>Achievements</h3>
-        <ul className="profile__badges">
-          {totalSubmitted >= 5 && (
-            <li className="badge">
-              <img src="/src/assets/icons/chef-hat.svg" alt="Chef Badge" />
-              <p>5+ Recipes Added</p>
-            </li>
-          )}
-          {totalFavorites >= 10 && (
-            <li className="badge">
-              <img src="/src/assets/icons/star.svg" alt="Favorite Badge" />
-              <p>10+ Favorites</p>
-            </li>
-          )}
-          {totalSubmitted >= 1 && (
-            <li className="badge">
-              <img src="/src/assets/icons/fire.svg" alt="Streak Badge" />
-              <p>Weekly Streak</p>
-            </li>
-          )}
-        </ul>
-      </div>
-
       {/* Dashboard Link */}
       <div className="profile__section">
         <Link to="/dashboard" className="profile__btn dashboard-link">
@@ -222,11 +111,11 @@ const Profile = ({ userRecipes = [], onUpdateProfile, onSignOut }) => {
       </div>
 
       {/* Modals */}
-      {showEditModal && (
+      {isEditProfileOpen && (
         <EditProfileModal
-          currentUser={currentUser}
-          onClose={() => setShowEditModal(false)}
-          onUpdate={handleSaveProfile}
+          isOpen={isEditProfileOpen}
+          onClose={() => setIsEditProfileOpen(false)}
+          onUpdateUser={handleUpdateUser}
         />
       )}
 
