@@ -46,7 +46,7 @@ function DeleteConfirm({ item, itemName, onDelete, onClose, onSignOut }) {
         document.removeEventListener("keydown", handleEsc);
       };
     },
-    [onClose]
+    [onClose],
   );
 
   return (

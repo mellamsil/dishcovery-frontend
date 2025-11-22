@@ -34,7 +34,7 @@ function AddItem({ item, onClose, onAdd }) {
         setImage("");
       }
     },
-    [item]
+    [item],
   );
 
   function handleSubmit(e) {

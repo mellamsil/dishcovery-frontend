@@ -18,7 +18,7 @@ const ModalWithForm = forwardRef(
       hideSubmit = false,
       showDefaultButtons = true,
     },
-    ref
+    ref,
   ) => {
     // ESC key closes modal
     useEffect(() => {
@@ -115,7 +115,7 @@ const ModalWithForm = forwardRef(
         </div>
       </div>
     );
-  }
+  },
 );
 
 export default ModalWithForm;

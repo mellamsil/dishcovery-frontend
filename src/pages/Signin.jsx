@@ -48,7 +48,7 @@ const Signin = ({ onSwitchToRegister }) => {
 
         case 404:
           setError(
-            "Email not registered. Please register first. (Check backend route!)"
+            "Email not registered. Please register first. (Check backend route!)",
           );
           // temporarily prevent auto-opening register modal
           // if (typeof onSwitchToRegister === "function") {
@@ -63,7 +63,7 @@ const Signin = ({ onSwitchToRegister }) => {
     } catch (err) {
       console.error("[Signin] Unexpected error:", err);
       setError(
-        err.message || "An unexpected error occurred. Please try again."
+        err.message || "An unexpected error occurred. Please try again.",
       );
     } finally {
       setLoading(false);

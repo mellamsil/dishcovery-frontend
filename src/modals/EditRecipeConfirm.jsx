@@ -20,7 +20,7 @@ function EditRecipeConfirm({ item, onConfirm, onCancel }) {
         setNotes(item.notes || "");
       }
     },
-    [item]
+    [item],
   );
 
   function handleSubmit(e) {

@@ -32,7 +32,7 @@ const LoginModal = function ({
         document.removeEventListener("keydown", handleEsc);
       };
     },
-    [onClose]
+    [onClose],
   );
 
   const handleChange = function (e) {
@@ -80,7 +80,7 @@ const LoginModal = function ({
         ) {
           if (onRequireRegister) onRequireRegister(form.email);
           setError(
-            "No account found. Please register to save recipes to your cookbook."
+            "No account found. Please register to save recipes to your cookbook.",
           );
           setLoading(false);
           return;
@@ -98,7 +98,7 @@ const LoginModal = function ({
       .catch(function (err) {
         console.error("Login failed:", err);
         setError(
-          err?.message || "Login failed. Please check your credentials."
+          err?.message || "Login failed. Please check your credentials.",
         );
       })
       .finally(function () {

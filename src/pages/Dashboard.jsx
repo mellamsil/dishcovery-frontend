@@ -32,10 +32,10 @@ function Dashboard({ userRecipes = [], onAddItem, onEditItem, onDeleteItem }) {
   useEffect(
     function () {
       setRecipes(
-        Array.isArray(userRecipes) ? userRecipes : userRecipes.recipes || []
+        Array.isArray(userRecipes) ? userRecipes : userRecipes.recipes || [],
       );
     },
-    [userRecipes]
+    [userRecipes],
   );
 
   // Handlers

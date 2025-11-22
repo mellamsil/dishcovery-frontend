@@ -53,13 +53,13 @@ function Cookbook({ isSignedIn }) {
       setRecipes((prev) =>
         exists
           ? prev.map((r) => (r._id === saved._id ? saved : r))
-          : [...prev, saved]
+          : [...prev, saved],
       );
 
       setNotification(
         exists
           ? `Updated "${saved.title}" successfully.`
-          : `Added "${saved.title}" to your cookbook.`
+          : `Added "${saved.title}" to your cookbook.`,
       );
       setNotificationType(exists ? "edit" : "add");
       setTimeout(() => setNotification(""), 2000);

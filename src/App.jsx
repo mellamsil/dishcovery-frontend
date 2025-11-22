@@ -59,7 +59,7 @@ function App() {
     if (currentUser) {
       localStorage.setItem(
         getUserRecipesKey(currentUser),
-        JSON.stringify(userRecipes)
+        JSON.stringify(userRecipes),
       );
     }
   }, [userRecipes, currentUser]);
@@ -190,7 +190,7 @@ function App() {
 
   const handleEditItem = (updatedItem) =>
     setUserRecipes((prev) =>
-      prev.map((r) => (r._id === updatedItem._id ? updatedItem : r))
+      prev.map((r) => (r._id === updatedItem._id ? updatedItem : r)),
     );
 
   const handleDeleteItem = (id) =>

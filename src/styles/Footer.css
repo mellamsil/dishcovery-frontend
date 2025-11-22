@@ -69,7 +69,9 @@
   font-size: 18px;
   color: #ff6f61;
   text-decoration: none;
-  transition: transform 0.2s ease, color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
 }
 
 .social-link:hover {
