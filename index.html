@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%vite.svg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Roboto:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dishcovery</title>
+
+    <script>
+      if (
+        window.location.pathname === "/dishcovery-frontend" &&
+        !window.location.pathname.endsWith("/")
+      ) {
+        window.location.replace("/dishcovery-frontend/");
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="%BASE_URL%src/main.jsx"></script>
+  </body>
+</html>
